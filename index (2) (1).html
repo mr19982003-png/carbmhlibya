@@ -1,0 +1,2314 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>حساب الكربوهيدرات - أ. محمد طارق</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal:#0d9488;--teal-dark:#0f766e;--teal-light:#99f6e4;--teal-pale:#f0fdfa;
+  --amber:#f59e0b;--amber-pale:#fffbeb;
+  --blue:#3b82f6;--blue-pale:#eff6ff;
+  --purple:#8b5cf6;--purple-pale:#f5f3ff;
+  --red:#ef4444;--red-pale:#fef2f2;
+  --green:#22c55e;--green-pale:#f0fdf4;
+  --text-dark:#1c1917;--text-mid:#44403c;--text-light:#78716c;
+  --border:#e2e8f0;--bg:#f8fafc;--card:#ffffff;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text-dark);min-height:100vh;direction:rtl;}
+
+header{background:linear-gradient(135deg,#0f766e 0%,#0d9488 60%,#14b8a6 100%);color:white;padding:28px 24px 36px;text-align:center;position:relative;overflow:hidden;}
+header::before{content:'';position:absolute;top:-50px;left:-50px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.06);}
+header::after{content:'';position:absolute;bottom:-70px;right:-30px;width:240px;height:240px;border-radius:50%;background:rgba(255,255,255,.06);}
+header h1{font-family:'Tajawal',sans-serif;font-size:1.9rem;font-weight:800;position:relative;z-index:1;}
+header p{font-size:.88rem;opacity:.85;margin-top:5px;position:relative;z-index:1;}
+.hbadge{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:3px 14px;font-size:.8rem;margin-top:8px;position:relative;z-index:1;}
+
+.container{max-width:980px;margin:0 auto;padding:20px 14px 60px;}
+
+.tabs{display:flex;gap:5px;background:white;border:1px solid var(--border);border-radius:14px;padding:5px;margin-bottom:20px;overflow-x:auto;scrollbar-width:none;box-shadow:0 1px 6px rgba(0,0,0,.06);}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{flex:1;min-width:78px;padding:9px 6px;border:none;background:transparent;border-radius:10px;font-family:'Cairo',sans-serif;font-size:.77rem;font-weight:600;color:var(--text-light);cursor:pointer;transition:all .18s;white-space:nowrap;text-align:center;}
+.tab.active{background:var(--teal);color:white;box-shadow:0 2px 8px rgba(13,148,136,.35);}
+.tab:hover:not(.active){background:var(--teal-pale);color:var(--teal-dark);}
+
+.section{display:none;}.section.active{display:block;}
+
+/* PROFILE */
+.profile-banner{background:linear-gradient(135deg,#1e40af,#3b82f6);color:white;border-radius:14px;padding:14px 18px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;box-shadow:0 4px 14px rgba(59,130,246,.25);}
+.profile-banner.empty{background:linear-gradient(135deg,#475569,#64748b);}
+.profile-name{font-family:'Tajawal',sans-serif;font-weight:700;font-size:1rem;}
+.profile-pills{display:flex;gap:7px;flex-wrap:wrap;}
+.ppill{background:rgba(255,255,255,.2);border-radius:20px;padding:3px 11px;font-size:.76rem;font-weight:600;}
+.pf-edit-btn{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:white;border-radius:8px;padding:6px 13px;font-family:'Cairo',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer;white-space:nowrap;}
+.pf-edit-btn:hover{background:rgba(255,255,255,.35);}
+
+.pf-card{background:white;border:1.5px solid var(--border);border-radius:16px;padding:22px;margin-bottom:20px;box-shadow:0 2px 10px rgba(0,0,0,.05);}
+.pf-title{font-family:'Tajawal',sans-serif;font-size:1.05rem;font-weight:700;color:#1e40af;margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid var(--blue-pale);}
+.pf-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;}
+.pf-field label{display:block;font-size:.8rem;font-weight:700;color:var(--text-mid);margin-bottom:5px;}
+.pf-field input{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-family:'Cairo',sans-serif;font-size:.9rem;transition:border .2s;}
+.pf-field input:focus{outline:none;border-color:var(--blue);}
+.pf-hint{font-size:.72rem;color:var(--text-light);margin-top:3px;}
+.pf-save{margin-top:16px;background:linear-gradient(135deg,#1e40af,#3b82f6);color:white;border:none;border-radius:10px;padding:11px 28px;font-family:'Cairo',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer;transition:all .2s;box-shadow:0 3px 10px rgba(59,130,246,.3);}
+.pf-save:hover{transform:translateY(-1px);}
+
+/* FOOD GRID */
+.food-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px;}
+.food-card{background:var(--card);border:1.5px solid var(--border);border-radius:14px;padding:13px 14px;transition:all .2s;user-select:none;}
+.food-card:hover{border-color:var(--teal);transform:translateY(-1px);box-shadow:0 4px 14px rgba(13,148,136,.1);}
+.food-card.selected{border-color:var(--teal);background:var(--teal-pale);}
+.fc-top{display:flex;align-items:center;gap:10px;}
+.fc-info{flex:1;}
+.fc-name{font-weight:700;font-size:.91rem;color:var(--text-dark);}
+.fc-meta{font-size:.74rem;color:var(--text-light);margin-top:1px;}
+.fc-badge{background:var(--teal);color:white;border-radius:10px;padding:6px 10px;font-weight:700;font-size:.82rem;text-align:center;min-width:46px;cursor:pointer;flex-shrink:0;transition:background .15s;}
+.fc-badge:hover{background:var(--teal-dark);}
+.fc-badge.added{background:#0f766e;}
+
+.fc-row{display:none;margin-top:10px;gap:7px;align-items:center;flex-wrap:wrap;}
+.fc-row.show{display:flex;}
+.fc-row label{font-size:.76rem;font-weight:600;color:var(--text-mid);white-space:nowrap;}
+.fc-row input{flex:1;min-width:70px;padding:7px 10px;border:1.5px solid var(--border);border-radius:8px;font-family:'Cairo',sans-serif;font-size:.87rem;}
+.fc-row input:focus{outline:none;border-color:var(--teal);}
+.fc-prev{font-size:.76rem;font-weight:700;color:var(--teal-dark);white-space:nowrap;min-width:70px;}
+.fc-add{background:var(--teal);color:white;border:none;border-radius:8px;padding:7px 13px;font-family:'Cairo',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer;transition:all .15s;white-space:nowrap;}
+.fc-add:hover{background:var(--teal-dark);}
+.fc-del{background:none;border:none;color:#d1d5db;cursor:pointer;font-size:.95rem;padding:3px 6px;border-radius:6px;transition:all .15s;}
+.fc-del:hover{background:#fee2e2;color:var(--red);}
+
+/* CART */
+.cart-section{background:white;border:1.5px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:20px;box-shadow:0 2px 12px rgba(0,0,0,.05);}
+.cart-hdr{background:linear-gradient(135deg,#0f766e,#14b8a6);color:white;padding:14px 18px;font-weight:700;font-size:.93rem;display:flex;align-items:center;justify-content:space-between;}
+.cart-empty{padding:34px;text-align:center;color:var(--text-light);font-size:.87rem;}
+.ci{display:flex;align-items:center;padding:11px 18px;border-bottom:1px solid #f5f5f4;gap:8px;}
+.ci:last-child{border-bottom:none;}
+.ci-name{font-weight:600;font-size:.87rem;flex:1;}
+.ci-detail{font-size:.72rem;color:var(--text-light);}
+.ci-carb{font-weight:700;color:var(--teal-dark);font-size:.88rem;min-width:72px;text-align:left;}
+.ci-del{background:none;border:none;color:#d1d5db;cursor:pointer;font-size:.95rem;padding:2px 6px;border-radius:6px;transition:all .15s;}
+.ci-del:hover{background:#fee2e2;color:var(--red);}
+.cart-total{padding:13px 18px;border-top:2px solid var(--teal-light);display:flex;justify-content:space-between;align-items:center;background:var(--teal-pale);}
+.ct-lbl{font-weight:700;color:var(--text-mid);font-size:.88rem;}
+.ct-val{font-family:'Tajawal',sans-serif;font-size:1.45rem;font-weight:800;color:var(--teal-dark);}
+
+/* CALC CARDS */
+.cc{background:white;border:1.5px solid var(--border);border-radius:16px;padding:20px;margin-bottom:18px;box-shadow:0 2px 10px rgba(0,0,0,.05);}
+.cc-title{font-family:'Tajawal',sans-serif;font-size:1rem;font-weight:700;color:var(--text-dark);margin-bottom:14px;padding-bottom:9px;border-bottom:2px solid #f5f5f4;}
+.cc-row{display:flex;align-items:center;gap:9px;margin-bottom:11px;flex-wrap:wrap;}
+.cc-lbl{font-weight:600;font-size:.82rem;color:var(--text-mid);min-width:150px;}
+.cc-inp{padding:9px 11px;border:1.5px solid var(--border);border-radius:9px;font-family:'Cairo',sans-serif;font-size:.9rem;width:112px;transition:border .2s;}
+.cc-inp:focus{outline:none;border-color:var(--teal);}
+.cc-inp.fromP{border-color:#bfdbfe;background:#eff6ff;}
+.fromP-note{font-size:.7rem;color:#3b82f6;font-weight:600;}
+.cc-unit{font-size:.75rem;color:var(--text-light);}
+.cc-btn{background:linear-gradient(135deg,#0d9488,#14b8a6);color:white;border:none;border-radius:10px;padding:10px 24px;font-family:'Cairo',sans-serif;font-weight:700;font-size:.88rem;cursor:pointer;transition:all .2s;box-shadow:0 3px 10px rgba(13,148,136,.3);}
+.cc-btn:hover{transform:translateY(-1px);}
+
+/* RESULTS */
+.rb{border-radius:12px;padding:15px 17px;margin-top:12px;}
+.rb.teal  {background:var(--teal-pale); border:2px solid var(--teal-light);}
+.rb.green {background:var(--green-pale);border:2px solid #bbf7d0;}
+.rb.amber {background:var(--amber-pale);border:2px solid #fde68a;}
+.rb.red   {background:var(--red-pale);  border:2px solid #fca5a5;}
+.rb.purple{background:var(--purple-pale);border:2px solid #ddd6fe;}
+.rb-num{font-family:'Tajawal',sans-serif;font-size:1.9rem;font-weight:800;}
+.rb-lbl{font-size:.8rem;color:var(--text-light);margin-top:3px;}
+.rb-steps{font-size:.77rem;color:var(--text-mid);margin-top:5px;line-height:1.8;}
+.teal .rb-num{color:var(--teal-dark);}
+.green .rb-num{color:#065f46;}
+.amber .rb-num{color:#92400e;}
+.red .rb-num{color:#b91c1c;}
+.purple .rb-num{color:#5b21b6;}
+
+.formula{background:var(--teal-pale);border-right:4px solid var(--teal);border-radius:8px;padding:10px 14px;margin:9px 0;font-weight:600;font-size:.83rem;color:var(--text-dark);line-height:1.7;}
+
+/* SEARCH */
+.srch{position:relative;margin-bottom:14px;}
+.srch input{width:100%;padding:10px 44px 10px 14px;border:1.5px solid var(--border);border-radius:12px;font-family:'Cairo',sans-serif;font-size:.87rem;background:white;transition:border .2s;}
+.srch input:focus{outline:none;border-color:var(--teal);}
+.srch-ico{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-light);pointer-events:none;}
+
+.sec-title{font-family:'Tajawal',sans-serif;font-size:1.03rem;font-weight:700;color:var(--text-dark);margin-bottom:11px;display:flex;align-items:center;gap:7px;}
+.dot{width:9px;height:9px;background:var(--teal);border-radius:50%;display:inline-block;}
+
+.zero-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:8px;}
+.zero-chip{background:white;border:1.5px solid #d1fae5;border-radius:9px;padding:10px 13px;text-align:center;font-weight:600;font-size:.8rem;color:#065f46;}
+
+.info-card{background:white;border:1.5px solid var(--border);border-radius:14px;padding:19px 21px;margin-bottom:15px;box-shadow:0 1px 6px rgba(0,0,0,.04);}
+.info-card h3{font-family:'Tajawal',sans-serif;font-size:.98rem;font-weight:700;color:var(--teal-dark);margin-bottom:9px;}
+.info-card p,.info-card li{font-size:.84rem;line-height:1.8;color:var(--text-mid);}
+.info-card ul{padding-right:17px;}
+
+.clear-btn{background:#fef2f2;color:var(--red);border:1.5px solid #fca5a5;border-radius:8px;padding:5px 11px;font-family:'Cairo',sans-serif;font-weight:600;font-size:.76rem;cursor:pointer;}
+.clear-btn:hover{background:#fee2e2;}
+
+footer{text-align:center;padding:17px;font-size:.76rem;color:var(--text-light);border-top:1px solid var(--border);background:white;}
+
+/* COUNTER BADGE */
+.counter-badge{position:fixed;top:14px;left:14px;z-index:999;background:rgba(255,255,255,.95);border:2px solid var(--teal);border-radius:50px;padding:6px 14px;display:flex;align-items:center;gap:7px;box-shadow:0 3px 14px rgba(13,148,136,.25);backdrop-filter:blur(6px);}
+.counter-badge .cb-num{font-family:'Tajawal',sans-serif;font-weight:800;font-size:1.05rem;color:var(--teal-dark);}
+.counter-badge .cb-lbl{font-size:.72rem;color:var(--text-mid);font-weight:600;}
+
+/* WHATSAPP FLOAT */
+.wa-float{position:fixed;bottom:22px;left:18px;z-index:999;background:#25d366;color:white;border-radius:50px;padding:11px 18px;display:flex;align-items:center;gap:8px;font-family:'Cairo',sans-serif;font-weight:700;font-size:.85rem;text-decoration:none;box-shadow:0 4px 18px rgba(37,211,102,.45);transition:all .2s;}
+.wa-float:hover{background:#1ebe5d;transform:translateY(-2px);box-shadow:0 6px 22px rgba(37,211,102,.5);}
+.wa-icon{font-size:1.3rem;}
+
+/* SNACK SECTION */
+.snack-section{background:white;border:1.5px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:20px;box-shadow:0 2px 12px rgba(0,0,0,.06);}
+.snack-hdr{background:linear-gradient(135deg,#5b21b6,#8b5cf6);color:white;padding:14px 18px;font-weight:700;font-size:.93rem;display:flex;align-items:center;justify-content:space-between;}
+.snack-hdr .sh-sub{font-size:.75rem;opacity:.85;font-weight:400;}
+.snack-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;padding:16px;}
+.snack-card{background:var(--purple-pale);border:1.5px solid #ddd6fe;border-radius:13px;padding:14px 16px;}
+.snack-card .sk-title{font-family:'Tajawal',sans-serif;font-weight:700;font-size:.95rem;color:#5b21b6;margin-bottom:6px;}
+.snack-card .sk-emoji{font-size:1.5rem;margin-bottom:6px;}
+.snack-card .sk-ing{font-size:.78rem;color:var(--text-mid);line-height:1.7;margin-bottom:6px;}
+.snack-card .sk-tip{font-size:.73rem;color:#7c3aed;font-weight:600;background:rgba(139,92,246,.1);border-radius:7px;padding:4px 9px;display:inline-block;}
+.snack-day{font-size:.72rem;color:rgba(255,255,255,.75);margin-top:3px;}
+
+/* CLIENTS TABLE */
+.clients-table{width:100%;border-collapse:collapse;margin-top:8px;font-size:.8rem;}
+.clients-table th{background:#f0fdfa;color:var(--teal-dark);font-weight:700;padding:8px 10px;border-bottom:2px solid var(--teal-light);text-align:right;}
+.clients-table td{padding:8px 10px;border-bottom:1px solid #f5f5f4;color:var(--text-mid);}
+.clients-table tr:last-child td{border-bottom:none;}
+.clients-table tr:hover td{background:#f0fdfa;}
+.ct-load-btn{background:var(--teal-pale);color:var(--teal-dark);border:1.5px solid var(--teal-light);border-radius:7px;padding:4px 10px;font-family:'Cairo',sans-serif;font-size:.75rem;font-weight:700;cursor:pointer;}
+.ct-load-btn:hover{background:var(--teal-light);}
+.ct-del-btn{background:#fef2f2;color:var(--red);border:1.5px solid #fca5a5;border-radius:7px;padding:4px 9px;font-family:'Cairo',sans-serif;font-size:.75rem;font-weight:700;cursor:pointer;}
+.ct-del-btn:hover{background:#fee2e2;}
+.clients-empty{text-align:center;color:var(--text-light);font-size:.82rem;padding:18px;}
+.pf-save-status{margin-top:10px;font-size:.82rem;font-weight:700;}
+
+/* EXTERNAL PRODUCTS */
+.ext-section{background:white;border:1.5px solid #fde68a;border-radius:16px;overflow:hidden;margin-bottom:20px;box-shadow:0 2px 12px rgba(245,158,11,.1);}
+.ext-hdr{background:linear-gradient(135deg,#d97706,#f59e0b);color:white;padding:14px 18px;font-weight:700;font-size:.93rem;display:flex;align-items:center;gap:8px;}
+.ext-hdr .ext-sub{font-size:.75rem;opacity:.85;font-weight:400;margin-right:auto;}
+.ext-body{padding:16px;}
+.ext-row{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end;margin-bottom:12px;}
+.ext-field label{display:block;font-size:.77rem;font-weight:700;color:var(--text-mid);margin-bottom:5px;}
+.ext-field input{width:100%;padding:9px 12px;border:1.5px solid #fde68a;border-radius:10px;font-family:'Cairo',sans-serif;font-size:.88rem;transition:border .2s;background:#fffbeb;}
+.ext-field input:focus{outline:none;border-color:#f59e0b;}
+.ext-add-btn{background:linear-gradient(135deg,#d97706,#f59e0b);color:white;border:none;border-radius:10px;padding:9px 18px;font-family:'Cairo',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer;white-space:nowrap;transition:all .2s;box-shadow:0 2px 8px rgba(245,158,11,.35);height:fit-content;}
+.ext-add-btn:hover{transform:translateY(-1px);}
+.ext-list{margin-top:4px;}
+.ext-item{display:flex;align-items:center;background:#fffbeb;border:1.5px solid #fde68a;border-radius:10px;padding:9px 13px;margin-bottom:8px;gap:8px;}
+.ext-item-name{flex:1;font-weight:700;font-size:.87rem;color:#92400e;}
+.ext-item-carb{font-weight:800;color:#d97706;font-size:.88rem;min-width:80px;text-align:left;}
+.ext-item-del{background:none;border:none;color:#d1d5db;cursor:pointer;font-size:.9rem;padding:2px 6px;border-radius:6px;transition:all .15s;}
+.ext-item-del:hover{background:#fee2e2;color:var(--red);}
+.ext-empty{text-align:center;color:var(--text-light);font-size:.82rem;padding:14px;}
+
+/* ══════════════════════════════════════
+   BLOOD SUGAR TRACKER — متابعة السكر
+══════════════════════════════════════ */
+.bs-section{background:white;border:1.5px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:20px;box-shadow:0 2px 12px rgba(0,0,0,.06);}
+.bs-hdr{background:linear-gradient(135deg,#be185d,#ec4899);color:white;padding:14px 18px;font-weight:700;font-size:.93rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.bs-hdr-sub{font-size:.75rem;opacity:.85;font-weight:400;}
+.bs-body{padding:16px;}
+.bs-date-row{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
+.bs-date-row label{font-size:.82rem;font-weight:700;color:var(--text-mid);}
+.bs-date-inp{padding:9px 12px;border:1.5px solid var(--border);border-radius:10px;font-family:'Cairo',sans-serif;font-size:.88rem;flex:1;min-width:140px;}
+.bs-date-inp:focus{outline:none;border-color:#ec4899;}
+.bs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:16px;}
+.bs-card{background:#fdf2f8;border:1.5px solid #fbcfe8;border-radius:14px;padding:14px 16px;}
+.bs-card-title{font-family:'Tajawal',sans-serif;font-weight:700;font-size:.92rem;color:#be185d;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.bs-card-icon{font-size:1.1rem;}
+.bs-input-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.bs-input-row label{font-size:.77rem;font-weight:700;color:#9d174d;min-width:90px;}
+.bs-inp{flex:1;padding:8px 11px;border:1.5px solid #fbcfe8;border-radius:9px;font-family:'Cairo',sans-serif;font-size:.9rem;background:white;transition:border .2s;}
+.bs-inp:focus{outline:none;border-color:#ec4899;}
+.bs-unit{font-size:.73rem;color:#be185d;font-weight:600;white-space:nowrap;}
+.bs-status{font-size:.72rem;padding:4px 10px;border-radius:20px;font-weight:700;display:inline-block;margin-top:4px;}
+.bs-status.ok{background:#d1fae5;color:#065f46;}
+.bs-status.high{background:#fee2e2;color:#991b1b;}
+.bs-status.low{background:#fef9c3;color:#854d0e;}
+.bs-save-btn{background:linear-gradient(135deg,#be185d,#ec4899);color:white;border:none;border-radius:10px;padding:10px 26px;font-family:'Cairo',sans-serif;font-weight:700;font-size:.88rem;cursor:pointer;transition:all .2s;box-shadow:0 3px 10px rgba(236,72,153,.35);}
+.bs-save-btn:hover{transform:translateY(-1px);}
+.bs-clear-btn{background:#fdf2f8;color:#be185d;border:1.5px solid #fbcfe8;border-radius:10px;padding:10px 18px;font-family:'Cairo',sans-serif;font-weight:700;font-size:.82rem;cursor:pointer;}
+.bs-clear-btn:hover{background:#fce7f3;}
+.bs-btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;}
+.bs-history-hdr{font-family:'Tajawal',sans-serif;font-size:.95rem;font-weight:700;color:#be185d;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #fbcfe8;display:flex;align-items:center;justify-content:space-between;}
+.bs-table-wrap{overflow-x:auto;}
+.bs-table{width:100%;border-collapse:collapse;font-size:.78rem;}
+.bs-table th{background:#fce7f3;color:#be185d;font-weight:700;padding:9px 8px;border-bottom:2px solid #fbcfe8;text-align:center;white-space:nowrap;}
+.bs-table td{padding:8px;border-bottom:1px solid #fdf2f8;text-align:center;color:var(--text-mid);}
+.bs-table tr:hover td{background:#fdf2f8;}
+.bs-table tr:last-child td{border-bottom:none;}
+.bs-val{font-weight:700;font-size:.85rem;}
+.bs-val.ok{color:#065f46;}
+.bs-val.high{color:#b91c1c;}
+.bs-val.low{color:#92400e;}
+.bs-val.empty{color:#d1d5db;font-weight:400;font-size:.8rem;}
+.bs-del-row{background:none;border:none;color:#d1d5db;cursor:pointer;font-size:.85rem;padding:3px 6px;border-radius:6px;transition:all .15s;}
+.bs-del-row:hover{background:#fee2e2;color:var(--red);}
+.bs-empty{text-align:center;color:var(--text-light);font-size:.85rem;padding:24px;}
+.bs-save-status{font-size:.82rem;font-weight:700;color:#be185d;margin-top:8px;display:none;}
+
+@media(max-width:480px){
+  header h1{font-size:1.5rem;}
+  .food-grid{grid-template-columns:1fr;}
+  .tab{font-size:.7rem;padding:7px 4px;}
+  .pf-grid{grid-template-columns:1fr 1fr;}
+  .cc-inp{width:100px;}
+  .clients-table{font-size:.72rem;}
+  .ext-row{grid-template-columns:1fr 1fr;gap:8px;}
+  .ext-add-btn{grid-column:1/-1;}
+}
+
+/* ══════════════════════════════════════
+   ACCESS GATE — شاشة الدخول
+══════════════════════════════════════ */
+#access-gate{
+  position:fixed;inset:0;z-index:9999;
+  background:linear-gradient(145deg,#0f766e 0%,#0d9488 50%,#14b8a6 100%);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cairo',sans-serif;
+}
+.gate-box{
+  background:white;border-radius:24px;padding:40px 32px;
+  width:min(420px,92vw);text-align:center;
+  box-shadow:0 24px 60px rgba(0,0,0,.25);
+  animation:gateIn .4s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes gateIn{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+.gate-logo{font-size:3rem;margin-bottom:8px;}
+.gate-title{font-family:'Tajawal',sans-serif;font-size:1.5rem;font-weight:800;color:#0f766e;margin-bottom:4px;}
+.gate-sub{font-size:.83rem;color:#64748b;margin-bottom:28px;line-height:1.6;}
+.gate-field{margin-bottom:16px;text-align:right;}
+.gate-field label{display:block;font-size:.82rem;font-weight:700;color:#374151;margin-bottom:6px;}
+.gate-field input{
+  width:100%;padding:12px 16px;border:2px solid #e2e8f0;border-radius:12px;
+  font-family:'Cairo',sans-serif;font-size:1rem;letter-spacing:2px;
+  transition:border .2s;text-align:center;direction:ltr;
+}
+.gate-field input:focus{outline:none;border-color:#0d9488;}
+.gate-btn{
+  width:100%;padding:13px;background:linear-gradient(135deg,#0d9488,#14b8a6);
+  color:white;border:none;border-radius:12px;font-family:'Cairo',sans-serif;
+  font-size:1rem;font-weight:700;cursor:pointer;transition:all .2s;
+  box-shadow:0 4px 14px rgba(13,148,136,.4);margin-top:4px;
+}
+.gate-btn:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(13,148,136,.5);}
+.gate-btn:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+.gate-status{
+  margin-top:14px;padding:10px 14px;border-radius:10px;font-size:.82rem;font-weight:600;
+  display:none;
+}
+.gate-status.pending{background:#fef9c3;color:#854d0e;border:1.5px solid #fde047;}
+.gate-status.rejected{background:#fee2e2;color:#991b1b;border:1.5px solid #fca5a5;}
+.gate-status.error{background:#fef2f2;color:#991b1b;border:1.5px solid #fca5a5;}
+.gate-note{font-size:.72rem;color:#94a3b8;margin-top:12px;line-height:1.6;}
+
+/* ══════════════════════════════════════
+   ADMIN PANEL — لوحة التحكم
+══════════════════════════════════════ */
+#admin-overlay{
+  position:fixed;inset:0;z-index:8888;background:rgba(0,0,0,.55);
+  backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;
+}
+#admin-overlay.show{display:flex;}
+.admin-box{
+  background:#f8fafc;border-radius:20px;width:min(720px,96vw);
+  max-height:90vh;overflow-y:auto;
+  box-shadow:0 24px 60px rgba(0,0,0,.3);
+  animation:gateIn .3s ease;
+}
+.admin-hdr{
+  background:linear-gradient(135deg,#1e3a5f,#1e40af);
+  color:white;padding:18px 24px;border-radius:20px 20px 0 0;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.admin-hdr h2{font-family:'Tajawal',sans-serif;font-size:1.2rem;font-weight:800;}
+.admin-close{background:rgba(255,255,255,.2);border:none;color:white;border-radius:8px;padding:6px 12px;cursor:pointer;font-size:1.1rem;}
+.admin-body{padding:20px 24px;}
+.admin-section{background:white;border:1.5px solid #e2e8f0;border-radius:14px;padding:18px;margin-bottom:16px;}
+.admin-section-title{font-family:'Tajawal',sans-serif;font-weight:700;font-size:.98rem;color:#1e40af;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.admin-add-row{display:flex;gap:10px;align-items:flex-end;}
+.admin-add-row input{flex:1;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-family:'Cairo',sans-serif;font-size:.9rem;}
+.admin-add-row input:focus{outline:none;border-color:#3b82f6;}
+.admin-add-btn{background:linear-gradient(135deg,#1e40af,#3b82f6);color:white;border:none;border-radius:10px;padding:10px 18px;font-family:'Cairo',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer;white-space:nowrap;}
+.admin-add-btn:hover{opacity:.9;}
+.admin-phones-table{width:100%;border-collapse:collapse;margin-top:10px;font-size:.82rem;}
+.admin-phones-table th{background:#eff6ff;color:#1e40af;font-weight:700;padding:8px 10px;border-bottom:2px solid #bfdbfe;text-align:right;}
+.admin-phones-table td{padding:8px 10px;border-bottom:1px solid #f1f5f9;color:#374151;}
+.admin-phones-table tr:hover td{background:#f8fafc;}
+.status-badge{display:inline-block;border-radius:20px;padding:3px 11px;font-size:.74rem;font-weight:700;}
+.status-badge.approved{background:#d1fae5;color:#065f46;}
+.status-badge.pending{background:#fef9c3;color:#854d0e;}
+.status-badge.rejected{background:#fee2e2;color:#991b1b;}
+.ap-btn{background:#d1fae5;color:#065f46;border:1.5px solid #6ee7b7;border-radius:7px;padding:4px 10px;font-family:'Cairo',sans-serif;font-size:.74rem;font-weight:700;cursor:pointer;margin-left:4px;}
+.ap-btn:hover{background:#a7f3d0;}
+.rj-btn{background:#fee2e2;color:#991b1b;border:1.5px solid #fca5a5;border-radius:7px;padding:4px 10px;font-family:'Cairo',sans-serif;font-size:.74rem;font-weight:700;cursor:pointer;margin-left:4px;}
+.rj-btn:hover{background:#fecaca;}
+.del-ap-btn{background:#f1f5f9;color:#64748b;border:1.5px solid #e2e8f0;border-radius:7px;padding:4px 8px;font-family:'Cairo',sans-serif;font-size:.72rem;cursor:pointer;}
+.del-ap-btn:hover{background:#fee2e2;color:#ef4444;border-color:#fca5a5;}
+.admin-empty{text-align:center;color:#94a3b8;font-size:.82rem;padding:18px;}
+.admin-login-box{padding:20px 24px;}
+.admin-login-box label{display:block;font-size:.82rem;font-weight:700;color:#374151;margin-bottom:6px;text-align:right;}
+.admin-login-box input{width:100%;padding:10px 14px;border:2px solid #e2e8f0;border-radius:10px;font-family:'Cairo',sans-serif;font-size:.95rem;direction:ltr;text-align:center;letter-spacing:3px;}
+.admin-login-box input:focus{outline:none;border-color:#3b82f6;}
+.admin-login-btn{width:100%;margin-top:12px;padding:12px;background:linear-gradient(135deg,#1e40af,#3b82f6);color:white;border:none;border-radius:10px;font-family:'Cairo',sans-serif;font-weight:700;font-size:.95rem;cursor:pointer;}
+.admin-login-err{color:#ef4444;font-size:.8rem;font-weight:600;margin-top:8px;text-align:center;display:none;}
+.admin-tab-btn{
+  position:fixed;bottom:22px;right:18px;z-index:999;
+  background:linear-gradient(135deg,#1e3a5f,#1e40af);color:white;
+  border:none;border-radius:50px;padding:11px 18px;
+  display:flex;align-items:center;gap:8px;
+  font-family:'Cairo',sans-serif;font-weight:700;font-size:.82rem;
+  cursor:pointer;box-shadow:0 4px 18px rgba(30,64,175,.5);transition:all .2s;
+}
+.admin-tab-btn:hover{transform:translateY(-2px);}
+.pending-dot{
+  background:#ef4444;color:white;border-radius:50%;width:20px;height:20px;
+  font-size:.68rem;font-weight:800;display:flex;align-items:center;justify-content:center;
+}
+.wa-notify-btn{
+  background:linear-gradient(135deg,#075e54,#25d366);color:white;
+  border:none;border-radius:8px;padding:7px 13px;
+  font-family:'Cairo',sans-serif;font-size:.78rem;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;gap:5px;transition:all .2s;white-space:nowrap;
+}
+.wa-notify-btn:hover{opacity:.9;transform:translateY(-1px);}
+</style>
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+
+<!-- ACCESS GATE -->
+<div id="access-gate">
+  <div class="gate-box">
+    <div class="gate-logo">🥗</div>
+    <div class="gate-title">حساب الكربوهيدرات</div>
+    <div class="gate-sub">إعداد أ. محمد طارق<br>أدخل رقم هاتفك للدخول إلى التطبيق</div>
+    <div class="gate-field">
+      <label>📱 رقم الهاتف</label>
+      <input type="tel" id="gate-phone" placeholder="مثال: 0912345678" maxlength="15" oninput="gatePhoneInput(this)" onkeydown="if(event.key==='Enter')gateSubmit()">
+    </div>
+    <button class="gate-btn" id="gate-btn" onclick="gateSubmit()">🔍 التحقق من الدخول</button>
+    <div class="gate-status" id="gate-status"></div>
+    <p class="gate-note">سيتم التحقق من صلاحية رقمك للدخول.<br>إذا لم يكن رقمك مسجلاً، سيتم إرسال طلب الموافقة للمشرف.</p>
+  </div>
+</div>
+
+<!-- ADMIN OVERLAY -->
+<div id="admin-overlay">
+  <div class="admin-box">
+    <div class="admin-hdr">
+      <h2>🛡️ لوحة تحكم الإدمن — أ. محمد طارق</h2>
+      <button class="admin-close" onclick="closeAdmin()">✕</button>
+    </div>
+    <div id="admin-login-section" class="admin-login-box">
+      <label>🔐 كلمة مرور الإدمن</label>
+      <input type="password" id="admin-pass-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')adminLogin()">
+      <button class="admin-login-btn" onclick="adminLogin()">دخول لوحة التحكم</button>
+      <div id="admin-login-err" class="admin-login-err">❌ كلمة المرور غير صحيحة</div>
+    </div>
+    <div id="admin-panel-content" style="display:none">
+      <div class="admin-body">
+        <div class="admin-section">
+          <div class="admin-section-title">⚙️ إعدادات الإشعارات</div>
+          <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;">
+            <div style="flex:1;min-width:180px;">
+              <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:5px;">رقم واتساب المشرف (مع كود الدولة)</label>
+              <input type="tel" id="admin-wa-number" placeholder="مثال: 218926553884" style="width:100%;padding:9px 12px;border:1.5px solid #e2e8f0;border-radius:9px;font-family:'Cairo',sans-serif;font-size:.9rem;direction:ltr;">
+            </div>
+            <button class="admin-add-btn" onclick="saveAdminSettings()" style="height:38px;">💾 حفظ الإعدادات</button>
+          </div>
+          <div id="admin-settings-status" style="margin-top:8px;font-size:.78rem;font-weight:600;color:#0d9488;display:none;"></div>
+        </div>
+        <div class="admin-section">
+          <div class="admin-section-title">➕ إضافة / منح صلاحية رقم هاتف</div>
+          <div class="admin-add-row">
+            <input type="tel" id="admin-new-phone" placeholder="أدخل رقم الهاتف..." maxlength="15" onkeydown="if(event.key==='Enter')adminAddPhone()">
+            <input type="text" id="admin-new-name" placeholder="اسم العميل (اختياري)" style="flex:1.2;">
+            <button class="admin-add-btn" onclick="adminAddPhone()">✅ موافقة فورية</button>
+          </div>
+        </div>
+        <div class="admin-section">
+          <div class="admin-section-title">
+            ⏳ طلبات الانتظار
+            <span id="pending-count-badge" style="background:#ef4444;color:white;border-radius:20px;padding:2px 10px;font-size:.74rem;"></span>
+          </div>
+          <div id="admin-pending-list"><div class="admin-empty">لا توجد طلبات انتظار</div></div>
+        </div>
+        <div class="admin-section">
+          <div class="admin-section-title">✅ الأرقام المعتمدة</div>
+          <div id="admin-approved-list"><div class="admin-empty">لا توجد أرقام مضافة بعد</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button class="admin-tab-btn" id="admin-tab-btn" onclick="openAdmin()" style="display:none">
+  🛡️ لوحة التحكم
+  <span class="pending-dot" id="admin-pending-dot" style="display:none">0</span>
+</button>
+
+<!-- Counter Badge -->
+<div class="counter-badge">
+  <span>👥</span>
+  <span class="cb-num" id="global-counter">---</span>
+  <span class="cb-lbl">عميل مسجّل</span>
+</div>
+
+<!-- WhatsApp Float -->
+<a class="wa-float" href="https://wa.me/218926553884?text=السلام عليكم، أريد استشارة أخصائي التغذية" target="_blank">
+  <span class="wa-icon">💬</span>
+  استشارة أخصائي التغذية
+</a>
+
+<header>
+  <h1>🥗 حساب الكربوهيدرات</h1>
+  <p>الوجبات الليبية والعربية — حساب دقيق للكارب والأنسولين</p>
+  <div class="hbadge">إعداد أ. محمد طارق</div>
+</header>
+
+<div class="container">
+
+<div class="tabs">
+  <button class="tab active" onclick="showTab('profile',this)">👤 بيانات الحالة</button>
+  <button class="tab" onclick="showTab('builder',this)">🍽️ بناء الوجبة</button>
+  <button class="tab" onclick="showTab('breakfast',this)">☕ الإفطار</button>
+  <button class="tab" onclick="showTab('main',this)">🍲 الرئيسية</button>
+  <button class="tab" onclick="showTab('fruits',this)">🍎 الفواكه</button>
+  <button class="tab" onclick="showTab('nuts',this)">🥜 المكسرات</button>
+  <button class="tab" onclick="showTab('veggies',this)">🥦 الخضراوات</button>
+  <button class="tab" onclick="showTab('fast',this)">🍔 سريعة</button>
+  <button class="tab" onclick="showTab('misc',this)">📦 متنوعات</button>
+  <button class="tab" onclick="showTab('insulin',this)">💉 الأنسولين</button>
+  <button class="tab" onclick="showTab('sugar',this)">🩸 قراءات السكر</button>
+  <button class="tab" onclick="showTab('info',this)">ℹ️ معلومات</button>
+</div>
+
+<!-- ═══ PROFILE ═══ -->
+<div id="tab-profile" class="section active">
+
+  <!-- Daily Snack Recipes -->
+  <div class="snack-section">
+    <div class="snack-hdr">
+      <div>
+        <div>🥗 وصفات سناك خالية من الكربوهيدرات</div>
+        <div class="snack-day" id="snack-day-label"></div>
+      </div>
+      <div class="sh-sub">تتجدد يومياً · تُعاد كل 4 أيام</div>
+    </div>
+    <div class="snack-cards" id="snack-cards"></div>
+  </div>
+  <div class="pf-card">
+    <div class="pf-title">👤 بيانات الحالة — تُستخدم تلقائياً في جميع الحسابات</div>
+    <div class="pf-grid">
+      <div class="pf-field">
+        <label>اسم الحالة</label>
+        <input type="text" id="pf-name" placeholder="مثال: محمد">
+      </div>
+      <div class="pf-field">
+        <label>عامل الكارب (ICR)</label>
+        <input type="number" id="pf-icr" placeholder="مثال: 10" min="1" max="50">
+        <div class="pf-hint">كل ICR جرام كارب = وحدة أنسولين واحدة</div>
+      </div>
+      <div class="pf-field">
+        <label>هدف السكر (mg/dL)</label>
+        <input type="number" id="pf-target" placeholder="مثال: 120" value="120" min="60" max="200">
+        <div class="pf-hint">المستوى المستهدف لسكر الدم</div>
+      </div>
+      <div class="pf-field">
+        <label>عامل حساسية الأنسولين (ISF)</label>
+        <input type="number" id="pf-isf" placeholder="مثال: 35" min="1">
+        <div class="pf-hint">كم تخفض وحدة أنسولين من السكر (mg/dL)</div>
+      </div>
+    </div>
+    <button class="pf-save" onclick="saveProfile()">💾 حفظ البيانات</button>
+    <div id="pf-ok" style="display:none;margin-top:10px;font-size:.82rem;color:var(--teal-dark);font-weight:700;">✅ تم الحفظ!</div>
+  </div>
+  <!-- Clients Panel -->
+  <div class="pf-card" id="clients-panel" style="display:none">
+    <div class="pf-title" style="color:#0f766e;border-color:#ccfbf1;">📋 سجل العملاء المحفوظين</div>
+    <div id="clients-list"></div>
+  </div>
+
+  <div class="info-card">
+    <h3>📌 شرح العوامل</h3>
+    <ul>
+      <li><b>عامل الكارب (ICR):</b> مثلاً ICR=10 يعني 10 جرام كارب = وحدة أنسولين.</li>
+      <li><b>هدف السكر:</b> المستوى الذي تريد الوصول إليه، عادةً 100–120.</li>
+      <li><b>عامل الحساسية (ISF):</b> مثلاً ISF=35 يعني وحدة أنسولين تخفض السكر 35 وحدة.</li>
+    </ul>
+    <p style="margin-top:8px;font-style:italic;color:var(--text-light);">هذه العوامل يحددها الطبيب أو أخصائي السكري لكل حالة.</p>
+  </div>
+</div>
+
+<!-- ═══ BUILDER ═══ -->
+<div id="tab-builder" class="section">
+  <div id="bldr-banner" class="profile-banner empty">
+    <span class="profile-name">⚠️ لم تُدخل بيانات الحالة بعد</span>
+    <button class="pf-edit-btn" onclick="showTab('profile',document.querySelectorAll('.tab')[0])">إدخال البيانات</button>
+  </div>
+
+  <div class="cart-section">
+    <div class="cart-hdr">
+      <span>🧺 الوجبة المختارة</span>
+      <button class="clear-btn" onclick="clearCart()">مسح الكل</button>
+    </div>
+    <div id="cart-items"><div class="cart-empty">اختر أصنافاً من تبويبات الطعام وأدخل الكمية لإضافتها هنا.</div></div>
+    <div class="cart-total" id="cart-total" style="display:none">
+      <span class="ct-lbl">مجموع كربوهيدرات الوجبة</span>
+      <span class="ct-val" id="total-carbs-display">0</span>
+    </div>
+  </div>
+
+  <!-- ═══ EXTERNAL PRODUCTS ═══ -->
+  <div class="ext-section">
+    <div class="ext-hdr">
+      <span>🛒</span>
+      <span>منتجات خارجية</span>
+      <span class="ext-sub">أضف أي منتج جاهز بكمية الكارب المكتوبة على العبوة</span>
+    </div>
+    <div class="ext-body">
+      <div class="ext-row">
+        <div class="ext-field">
+          <label>اسم المنتج</label>
+          <input type="text" id="ext-name" placeholder="مثال: شوكولاتة كيتو">
+        </div>
+        <div class="ext-field">
+          <label>كمية الكارب (جرام)</label>
+          <input type="number" id="ext-carb" placeholder="مثال: 22" min="0" step="0.1">
+        </div>
+        <button class="ext-add-btn" onclick="addExtProduct()">+ إضافة</button>
+      </div>
+      <div class="ext-list" id="ext-list">
+        <div class="ext-empty" id="ext-empty">لم تُضف أي منتجات خارجية بعد.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cc" id="bldr-calc" style="display:none">
+    <div id="bldr-dose"></div>
+    <div style="margin-top:16px;padding-top:13px;border-top:1px dashed var(--border);">
+      <div class="cc-title" style="margin-bottom:10px;">🩸 الجرعة التصحيحية (اختياري)</div>
+      <div class="cc-row">
+        <span class="cc-lbl">قراءة جهاز السكر الآن</span>
+        <input type="number" class="cc-inp" id="bd-reading" placeholder="مثال: 250" min="0" oninput="calcBDCorr()">
+        <span class="cc-unit">mg/dL</span>
+      </div>
+      <div id="bd-corr"></div>
+      <div id="bd-total"></div>
+    </div>
+  </div>
+  <p style="font-size:.79rem;color:var(--text-light);text-align:center;margin-top:8px;">💡 اضغط على الزر الأخضر بجانب أي صنف لفتح خانة الكمية ثم أضفه</p>
+</div>
+
+<!-- ═══ FOOD TABS ═══ -->
+<div id="tab-breakfast" class="section">
+  <div class="srch"><span class="srch-ico">🔍</span><input type="text" placeholder="ابحث..." oninput="filterGrid('bg',this.value)"></div>
+  <div class="food-grid" id="bg"></div>
+</div>
+<div id="tab-main" class="section">
+  <div class="srch"><span class="srch-ico">🔍</span><input type="text" placeholder="ابحث..." oninput="filterGrid('mg',this.value)"></div>
+  <div class="food-grid" id="mg"></div>
+</div>
+<div id="tab-fruits" class="section">
+  <div class="srch"><span class="srch-ico">🔍</span><input type="text" placeholder="ابحث..." oninput="filterGrid('fg',this.value)"></div>
+  <div class="food-grid" id="fg"></div>
+</div>
+<div id="tab-nuts"    class="section"><div class="food-grid" id="ng"></div></div>
+<div id="tab-veggies" class="section"><div class="food-grid" id="vg"></div></div>
+<div id="tab-fast"    class="section"><div class="food-grid" id="ftg"></div></div>
+<div id="tab-misc" class="section">
+  <div class="food-grid" id="xg"></div>
+  <div style="margin-top:24px">
+    <div class="sec-title"><span class="dot"></span>أصناف لا تحتوي على كربوهيدرات</div>
+    <div class="zero-grid">
+      <div class="zero-chip">✅ اللحوم بأنواعها</div><div class="zero-chip">✅ البيض</div>
+      <div class="zero-chip">✅ الجبنة</div><div class="zero-chip">✅ التن</div>
+      <div class="zero-chip">✅ بعض الخضراوات</div><div class="zero-chip">✅ الزيوت</div>
+      <div class="zero-chip">✅ الشاهي</div><div class="zero-chip">✅ الطحينية</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ INSULIN ═══ -->
+<div id="tab-insulin" class="section">
+  <div id="ins-banner" class="profile-banner empty" style="margin-bottom:18px">
+    <span class="profile-name">⚠️ أدخل بيانات الحالة لتُملأ العوامل تلقائياً</span>
+    <button class="pf-edit-btn" onclick="showTab('profile',document.querySelectorAll('.tab')[0])">إدخال البيانات</button>
+  </div>
+
+  <!-- 1 carb calc -->
+  <div class="cc">
+    <div class="cc-title">🧮 حساب كارب صنف بالكمية الفعلية</div>
+    <p style="font-size:.79rem;color:var(--text-light);margin-bottom:12px;">المعادلة: <b>الكمية الفعلية × كارب الجدول ÷ كمية الجدول</b></p>
+    <div class="cc-row">
+      <span class="cc-lbl">كارب الجدول</span>
+      <input type="number" class="cc-inp" id="sc-tc" placeholder="مثال: 15" min="0" oninput="calcSC()">
+      <span class="cc-unit">جرام كارب</span>
+    </div>
+    <div class="cc-row">
+      <span class="cc-lbl">كمية الجدول المرجعية</span>
+      <input type="number" class="cc-inp" id="sc-ta" placeholder="مثال: 100" min="0.1" oninput="calcSC()">
+      <span class="cc-unit">جرام / مل</span>
+    </div>
+    <div class="cc-row">
+      <span class="cc-lbl">الكمية الفعلية المتناولة</span>
+      <input type="number" class="cc-inp" id="sc-aa" placeholder="مثال: 150" min="0" oninput="calcSC()">
+      <span class="cc-unit">جرام / مل</span>
+    </div>
+    <div id="sc-res"></div>
+  </div>
+
+  <!-- 2 meal dose -->
+  <div class="cc">
+    <div class="cc-title">💉 جرعة أنسولين الوجبة</div>
+    <p style="font-size:.79rem;color:var(--text-light);margin-bottom:12px;">المعادلة: <b>مجموع كارب الوجبة ÷ عامل الكارب (ICR)</b></p>
+    <div class="cc-row">
+      <span class="cc-lbl">مجموع كارب الوجبة</span>
+      <input type="number" class="cc-inp" id="md-carbs" placeholder="مثال: 60" min="0">
+      <span class="cc-unit">جرام</span>
+    </div>
+    <div class="cc-row">
+      <span class="cc-lbl">عامل الكارب (ICR)</span>
+      <input type="number" class="cc-inp" id="md-icr" placeholder="من البيانات" min="1" oninput="this.classList.remove('fromP'); document.getElementById('md-icr-note').textContent=''">
+      <span class="fromP-note" id="md-icr-note"></span>
+    </div>
+    <button class="cc-btn" onclick="calcMD()">احسب جرعة الوجبة</button>
+    <div id="md-res"></div>
+  </div>
+
+  <!-- 3 correction -->
+  <div class="cc">
+    <div class="cc-title">🩸 الجرعة التصحيحية</div>
+    <p style="font-size:.79rem;color:var(--text-light);margin-bottom:12px;">المعادلة: <b>(قراءة الجهاز − الهدف) ÷ عامل الحساسية (ISF)</b></p>
+    <div class="cc-row">
+      <span class="cc-lbl">قراءة جهاز السكر</span>
+      <input type="number" class="cc-inp" id="cd-reading" placeholder="مثال: 320" min="0">
+      <span class="cc-unit">mg/dL</span>
+    </div>
+    <div class="cc-row">
+      <span class="cc-lbl">هدف السكر</span>
+      <input type="number" class="cc-inp" id="cd-target" placeholder="من البيانات" min="60" oninput="this.classList.remove('fromP'); document.getElementById('cd-target-note').textContent=''">
+      <span class="fromP-note" id="cd-target-note"></span>
+    </div>
+    <div class="cc-row">
+      <span class="cc-lbl">عامل الحساسية (ISF)</span>
+      <input type="number" class="cc-inp" id="cd-isf" placeholder="من البيانات" min="1" oninput="this.classList.remove('fromP'); document.getElementById('cd-isf-note').textContent=''">
+      <span class="fromP-note" id="cd-isf-note"></span>
+    </div>
+    <button class="cc-btn" onclick="calcCD()">احسب الجرعة التصحيحية</button>
+    <div id="cd-res"></div>
+  </div>
+
+  <!-- 4 total -->
+  <div class="cc">
+    <div class="cc-title">📊 الجرعة الإجمالية (وجبة + تصحيح)</div>
+    <p style="font-size:.82rem;color:var(--text-light);margin-bottom:12px;">احسب الجرعتين أعلاه وسيظهر المجموع هنا تلقائياً.</p>
+    <div id="total-res"></div>
+  </div>
+</div>
+
+<!-- ═══ SUGAR READINGS ═══ -->
+<div id="tab-sugar" class="section">
+  <div class="bs-section">
+    <div class="bs-hdr">
+      <div>
+        <div>🩸 سجل قراءات السكر اليومية</div>
+        <div class="bs-hdr-sub">قبل وبعد كل وجبة — تُحفظ لكل حالة بشكل منفصل</div>
+      </div>
+    </div>
+    <div class="bs-body">
+
+      <!-- Date selector -->
+      <div class="bs-date-row">
+        <label>📅 التاريخ:</label>
+        <input type="date" class="bs-date-inp" id="bs-date" oninput="loadSugarReadings()">
+        <button class="bs-clear-btn" onclick="goTodaySugar()">اليوم</button>
+      </div>
+
+      <!-- Reading cards -->
+      <div class="bs-grid">
+
+        <!-- فطور -->
+        <div class="bs-card">
+          <div class="bs-card-title"><span class="bs-card-icon">☕</span> وجبة الفطور</div>
+          <div class="bs-input-row">
+            <label>قبل الوجبة</label>
+            <input type="number" class="bs-inp" id="bs-bf-before" placeholder="mg/dL" min="0" oninput="updateSugarStatus('bf-before',this.value)">
+            <span class="bs-unit">mg/dL</span>
+          </div>
+          <div id="bs-status-bf-before"></div>
+          <div class="bs-input-row" style="margin-top:8px">
+            <label>بعد ساعتين</label>
+            <input type="number" class="bs-inp" id="bs-bf-after" placeholder="mg/dL" min="0" oninput="updateSugarStatus('bf-after',this.value)">
+            <span class="bs-unit">mg/dL</span>
+          </div>
+          <div id="bs-status-bf-after"></div>
+        </div>
+
+        <!-- غداء -->
+        <div class="bs-card">
+          <div class="bs-card-title"><span class="bs-card-icon">🍲</span> وجبة الغداء</div>
+          <div class="bs-input-row">
+            <label>قبل الوجبة</label>
+            <input type="number" class="bs-inp" id="bs-lu-before" placeholder="mg/dL" min="0" oninput="updateSugarStatus('lu-before',this.value)">
+            <span class="bs-unit">mg/dL</span>
+          </div>
+          <div id="bs-status-lu-before"></div>
+          <div class="bs-input-row" style="margin-top:8px">
+            <label>بعد ساعتين</label>
+            <input type="number" class="bs-inp" id="bs-lu-after" placeholder="mg/dL" min="0" oninput="updateSugarStatus('lu-after',this.value)">
+            <span class="bs-unit">mg/dL</span>
+          </div>
+          <div id="bs-status-lu-after"></div>
+        </div>
+
+        <!-- عشاء -->
+        <div class="bs-card">
+          <div class="bs-card-title"><span class="bs-card-icon">🌙</span> وجبة العشاء</div>
+          <div class="bs-input-row">
+            <label>قبل الوجبة</label>
+            <input type="number" class="bs-inp" id="bs-di-before" placeholder="mg/dL" min="0" oninput="updateSugarStatus('di-before',this.value)">
+            <span class="bs-unit">mg/dL</span>
+          </div>
+          <div id="bs-status-di-before"></div>
+          <div class="bs-input-row" style="margin-top:8px">
+            <label>بعد ساعتين</label>
+            <input type="number" class="bs-inp" id="bs-di-after" placeholder="mg/dL" min="0" oninput="updateSugarStatus('di-after',this.value)">
+            <span class="bs-unit">mg/dL</span>
+          </div>
+          <div id="bs-status-di-after"></div>
+        </div>
+
+        <!-- قبل النوم -->
+        <div class="bs-card">
+          <div class="bs-card-title"><span class="bs-card-icon">😴</span> قبل النوم</div>
+          <div class="bs-input-row">
+            <label>قراءة النوم</label>
+            <input type="number" class="bs-inp" id="bs-bed" placeholder="mg/dL" min="0" oninput="updateSugarStatus('bed',this.value)">
+            <span class="bs-unit">mg/dL</span>
+          </div>
+          <div id="bs-status-bed"></div>
+        </div>
+
+      </div>
+
+      <!-- Save buttons -->
+      <div class="bs-btn-row">
+        <button class="bs-save-btn" onclick="saveSugarReadings()">💾 حفظ القراءات</button>
+        <button class="bs-clear-btn" onclick="clearSugarForm()">🗑️ مسح الخانات</button>
+      </div>
+      <div class="bs-save-status" id="bs-save-status"></div>
+
+      <!-- History table -->
+      <div class="bs-history-hdr">
+        📊 سجل القراءات السابقة
+        <button class="bs-clear-btn" onclick="loadSugarHistory()" style="font-size:.74rem;padding:5px 12px;">🔄 تحديث</button>
+      </div>
+      <div class="bs-table-wrap">
+        <table class="bs-table" id="bs-history-table">
+          <thead>
+            <tr>
+              <th>التاريخ</th>
+              <th>الحالة</th>
+              <th>ق. فطور</th>
+              <th>ب. فطور</th>
+              <th>ق. غداء</th>
+              <th>ب. غداء</th>
+              <th>ق. عشاء</th>
+              <th>ب. عشاء</th>
+              <th>نوم</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="bs-history-body">
+            <tr><td colspan="10" class="bs-empty">جارٍ التحميل...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══ INFO ═══ -->
+<div id="tab-info" class="section">
+  <div class="info-card">
+    <h3>🧮 حساب الكارب بالكمية الفعلية</h3>
+    <div class="formula">كارب الصنف = الكمية الفعلية × كارب الجدول ÷ كمية الجدول</div>
+    <p><b>مثال:</b> تناولت 150 جرام بطاطس، الجدول: 100 جرام = 20 كارب</p>
+    <p>الكارب = 150 × 20 ÷ 100 = <b>30 جرام كارب</b></p>
+  </div>
+  <div class="info-card">
+    <h3>💉 جرعة أنسولين الوجبة</h3>
+    <div class="formula">الجرعة = مجموع كارب الوجبة ÷ عامل الكارب (ICR)</div>
+    <p><b>مثال:</b> كارب الوجبة = 81، ICR = 9 → الجرعة = 81 ÷ 9 = <b>9 وحدات</b></p>
+  </div>
+  <div class="info-card">
+    <h3>🩸 الجرعة التصحيحية</h3>
+    <div class="formula">الجرعة التصحيحية = (قراءة الجهاز − الهدف) ÷ ISF</div>
+    <p><b>مثال:</b> قراءة = 320، الهدف = 120، ISF = 35</p>
+    <p>الجرعة = (320 − 120) ÷ 35 = <b>5.7 وحدات</b></p>
+  </div>
+  <div class="info-card">
+    <h3>🥤 ملاحظة العصائر</h3>
+    <p>توزن الفاكهة قبل الخلط. في الفروبي: اجمع كارب الحليب + كارب الفاكهة.</p>
+    <div class="formula">مثال: 225مل حليب (15 كارب) + 100جرام موز (25 كارب) = <b>40 كارب</b></div>
+  </div>
+  <div class="info-card">
+    <h3>⚠️ تنبيه</h3>
+    <p>قد تتغير الجرعة عند ممارسة الرياضة. استشر طبيبك لتحديد عوامل الحرق والحساسية.</p>
+  </div>
+  <div class="info-card">
+    <h3>📚 المراجع</h3>
+    <p>إعداد: <b>أ. محمد طارق</b> &nbsp;|&nbsp; المرجع الغذائي: جدول <b>أ. فضيلة الصربوط</b></p>
+  </div>
+</div>
+
+</div><!-- /container -->
+<footer>حساب الكربوهيدرات — إعداد أ. محمد طارق &nbsp;|&nbsp; للاستفسار راجع طبيبك المختص</footer>
+
+<script>
+// ════════════════════════════════════════════════════════
+// ACCESS CONTROL SYSTEM — نظام التحكم في الدخول
+// ════════════════════════════════════════════════════════
+
+const ADMIN_PASSWORD = 'admin2024';  // ← غيّر كلمة المرور هنا
+const APP_VERSION = 'v1';
+
+// ── مفاتيح التخزين ──
+const KEYS = {
+  approved: 'access:approved',
+  pending:  'access:pending',
+  settings: 'access:settings',
+  session:  'access_session_'+APP_VERSION
+};
+
+// ══════════════════════════════════════
+// FIREBASE FIRESTORE ADAPTER
+// ══════════════════════════════════════
+const firebaseConfig = {
+  apiKey: "AIzaSyAohfz37g3S625HB3q8ChahPY3TZbT2_64",
+  authDomain: "mohammedcarb-c7801.firebaseapp.com",
+  projectId: "mohammedcarb-c7801",
+  storageBucket: "mohammedcarb-c7801.firebasestorage.app",
+  messagingSenderId: "174853756014",
+  appId: "1:174853756014:web:ebcb0c427fc59d8b96c27f"
+};
+
+// تهيئة Firebase
+if (!window._fbApp) {
+  window._fbApp = firebase.initializeApp(firebaseConfig);
+}
+const _db = firebase.firestore();
+const _COL = 'appStorage'; // مجموعة Firestore
+
+window.storage = {
+  get: async function(key, shared) {
+    try {
+      const doc = await _db.collection(_COL).doc(_safeKey(key)).get();
+      if (!doc.exists) throw new Error('Key not found');
+      return { key, value: doc.data().value, shared: !!shared };
+    } catch(e) { throw e; }
+  },
+  set: async function(key, value, shared) {
+    try {
+      await _db.collection(_COL).doc(_safeKey(key)).set({ value, keyName: key, updatedAt: Date.now() });
+      return { key, value, shared: !!shared };
+    } catch(e) { return null; }
+  },
+  delete: async function(key, shared) {
+    try {
+      await _db.collection(_COL).doc(_safeKey(key)).delete();
+      return { key, deleted: true, shared: !!shared };
+    } catch(e) { return null; }
+  },
+  list: async function(prefix, shared) {
+    try {
+      const snap = await _db.collection(_COL)
+        .where('keyName', '>=', prefix || '')
+        .where('keyName', '<=', (prefix || '') + '\uf8ff')
+        .get();
+      const keys = [];
+      snap.forEach(doc => keys.push(doc.data().keyName || doc.id.replace(/__/g,':').replace(/_dt_/g,'.')));
+      return { keys, prefix, shared: !!shared };
+    } catch(e) {
+      // fallback: جلب كل المستندات وفلترتها
+      try {
+        const all = await _db.collection(_COL).get();
+        const keys = [];
+        all.forEach(doc => {
+          const k = doc.data().keyName || doc.id.replace(/__/g,':').replace(/_dt_/g,'.');
+          if (!prefix || k.startsWith(prefix)) keys.push(k);
+        });
+        return { keys, prefix, shared: !!shared };
+      } catch(e2) { return { keys: [] }; }
+    }
+  }
+};
+
+// تحويل المفتاح لصيغة صالحة لـ Firestore
+function _safeKey(key) {
+  return key.replace(/:/g,'__').replace(/\./g,'_dt_');
+}
+
+let currentUserPhone = null;
+let currentDeviceId  = null;
+let adminLoggedIn    = false;
+let adminPollTimer   = null;
+
+// ── توليد معرف الجهاز ──
+function getDeviceId(){
+  let id = localStorage.getItem('device_id');
+  if(!id){
+    id = 'dev_' + Date.now() + '_' + Math.random().toString(36).substr(2,8);
+    localStorage.setItem('device_id', id);
+  }
+  return id;
+}
+
+// ── تنظيف رقم الهاتف ──
+function normalizePhone(p){
+  return p.replace(/\s/g,'').replace(/^00/,'').replace(/^\+/,'');
+}
+
+function gatePhoneInput(inp){
+  inp.value = inp.value.replace(/[^0-9+\s\-]/g,'');
+}
+
+// ══════════════════════════════════════
+// GATE SUBMIT — فحص الرقم عند الدخول
+// ══════════════════════════════════════
+async function gateSubmit(){
+  const rawPhone = document.getElementById('gate-phone').value.trim();
+  if(!rawPhone){ showGateStatus('أدخل رقم الهاتف أولاً','error'); return; }
+
+  // كود المشرف السري: أي رقم ينتهي بـ +1998 يدخل مباشرة
+  if(rawPhone.endsWith('+1998')){
+    const deviceId = getDeviceId();
+    const cleanPhone = normalizePhone(rawPhone.replace('+1998',''));
+    grantAccess(cleanPhone || 'admin', deviceId);
+    return;
+  }
+
+  const phone = normalizePhone(rawPhone);
+  if(phone.length < 7){ showGateStatus('رقم الهاتف غير صحيح','error'); return; }
+
+  const deviceId = getDeviceId();
+  const btn = document.getElementById('gate-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳ جارٍ التحقق...';
+
+  try {
+    // فحص session محفوظة
+    const session = getSavedSession();
+    if(session && session.phone === phone && session.deviceId === deviceId){
+      // تحقق سريع من الاعتماد
+      const approved = await getApprovedData();
+      if(approved && approved[phone] && approved[phone].deviceId === deviceId){
+        grantAccess(phone, deviceId);
+        return;
+      }
+    }
+
+    // فحص قاعدة الأرقام المعتمدة
+    const approved = await getApprovedData();
+
+    if(approved && approved[phone]){
+      const entry = approved[phone];
+      // فحص الجهاز — يسمح بجهاز واحد فقط
+      if(entry.deviceId && entry.deviceId !== deviceId){
+        showGateStatus('⛔ هذا الرقم مسجل من جهاز مختلف. تواصل مع المشرف لإعادة تعيين الجهاز.','rejected');
+        btn.disabled = false;
+        btn.textContent = '🔍 التحقق من الدخول';
+        return;
+      }
+      // تحديث deviceId إذا لم يكن مسجلاً
+      if(!entry.deviceId){
+        entry.deviceId = deviceId;
+        approved[phone] = entry;
+        await window.storage.set(KEYS.approved, JSON.stringify(approved), true);
+      }
+      grantAccess(phone, deviceId);
+      return;
+    }
+
+    // فحص إذا كان في قائمة الانتظار
+    const pending = await getPendingData();
+    if(pending && pending[phone]){
+      if(pending[phone].deviceId !== deviceId){
+        // نفس الرقم من جهاز مختلف — رفض
+        showGateStatus('⛔ هذا الرقم مقدَّم من جهاز مختلف. لا يمكن تكرار الطلب.','rejected');
+        btn.disabled = false;
+        btn.textContent = '🔍 التحقق من الدخول';
+        return;
+      }
+      showGateStatus('⏳ طلبك قيد المراجعة من قِبَل المشرف. انتظر الموافقة...','pending');
+      btn.disabled = false;
+      btn.textContent = '🔄 تحديث الحالة';
+      startGatePoll(phone, deviceId);
+      return;
+    }
+
+    // رقم جديد — إرسال طلب دخول
+    await sendAccessRequest(phone, deviceId, approved, pending);
+
+  } catch(err){
+    console.error(err);
+    showGateStatus('حدث خطأ. تحقق من الاتصال وحاول مجدداً.','error');
+    btn.disabled = false;
+    btn.textContent = '🔍 التحقق من الدخول';
+  }
+}
+
+// ── إرسال طلب دخول جديد ──
+async function sendAccessRequest(phone, deviceId, approved, pending){
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('ar-LY') + ' ' + now.toLocaleTimeString('ar-LY',{hour:'2-digit',minute:'2-digit'});
+
+  const pend = pending || {};
+  pend[phone] = { deviceId, requestedAt: dateStr, timestamp: Date.now() };
+  await window.storage.set(KEYS.pending, JSON.stringify(pend), true);
+
+  const ADMIN_WA = '218926553884';
+  const settings = await getSettings();
+  const waNumber = (settings && settings.waNumber) ? settings.waNumber : ADMIN_WA;
+
+  const msg = encodeURIComponent(
+    '\uD83D\uDD14 \u0637\u0644\u0628 \u062F\u062E\u0648\u0644 \u062C\u062F\u064A\u062F \u2014 \u062D\u0633\u0627\u0628 \u0627\u0644\u0643\u0631\u0628\u0648\u0647\u064A\u062F\u0631\u0627\u062A\n\n' +
+    '\uD83D\uDCF1 \u0627\u0644\u0631\u0642\u0645: ' + phone + '\n' +
+    '\uD83D\uDD50 \u0627\u0644\u0648\u0642\u062A: ' + dateStr + '\n\n' +
+    '\u0627\u0641\u062A\u062D \u0644\u0648\u062D\u0629 \u0627\u0644\u062A\u062D\u0643\u0645 \u0644\u0644\u0645\u0648\u0627\u0641\u0642\u0629 \u0623\u0648 \u0627\u0644\u0631\u0641\u0636.'
+  );
+  const waUrl = 'https://wa.me/' + waNumber + '?text=' + msg;
+
+  const statusEl = document.getElementById('gate-status');
+  statusEl.className = 'gate-status pending';
+  statusEl.style.display = 'block';
+  statusEl.innerHTML =
+    '<div style="margin-bottom:10px;">\uD83D\uDCE8 \u062A\u0645 \u062A\u0633\u062C\u064A\u0644 \u0637\u0644\u0628\u0643. \u0627\u0636\u063A\u0637 \u0627\u0644\u0632\u0631 \u0623\u062F\u0646\u0627\u0647 \u0644\u0625\u0631\u0633\u0627\u0644 \u0627\u0644\u0625\u0634\u0639\u0627\u0631 \u0644\u0644\u0645\u0634\u0631\u0641:</div>' +
+    '<a href="' + waUrl + '" target="_blank" ' +
+    'style="display:inline-flex;align-items:center;gap:8px;background:#25d366;color:white;padding:10px 20px;border-radius:10px;text-decoration:none;font-weight:700;font-size:.9rem;box-shadow:0 3px 10px rgba(37,211,102,.4);">' +
+    '<span style="font-size:1.2rem;">\uD83D\uDCAC</span> \u0625\u0631\u0633\u0627\u0644 \u0625\u0634\u0639\u0627\u0631 \u0644\u0644\u0645\u0634\u0631\u0641 \u0639\u0628\u0631 \u0648\u0627\u062A\u0633\u0622\u0628</a>';
+
+  const btn = document.getElementById('gate-btn');
+  btn.disabled = false;
+  btn.textContent = '\uD83D\uDD04 \u062A\u062D\u062F\u064A\u062B \u0627\u0644\u062D\u0627\u0644\u0629';
+  startGatePoll(phone, deviceId);
+}
+
+// ── الفحص الدوري من شاشة الدخول ──
+let gatePollTimer = null;
+function startGatePoll(phone, deviceId){
+  if(gatePollTimer) clearInterval(gatePollTimer);
+  gatePollTimer = setInterval(async ()=>{
+    try{
+      const approved = await getApprovedData();
+      if(approved && approved[phone] && (!approved[phone].deviceId || approved[phone].deviceId === deviceId)){
+        clearInterval(gatePollTimer);
+        // تحديث deviceId
+        if(!approved[phone].deviceId){
+          approved[phone].deviceId = deviceId;
+          await window.storage.set(KEYS.approved, JSON.stringify(approved), true);
+        }
+        grantAccess(phone, deviceId);
+      }
+    }catch(e){}
+  }, 5000); // كل 5 ثوان
+}
+
+// ── منح الدخول ──
+function grantAccess(phone, deviceId){
+  if(gatePollTimer){ clearInterval(gatePollTimer); gatePollTimer = null; }
+  currentUserPhone = phone;
+  currentDeviceId  = deviceId;
+  // حفظ session
+  localStorage.setItem('access_session_'+APP_VERSION, JSON.stringify({phone, deviceId, ts: Date.now()}));
+  // إخفاء الـ gate
+  const gate = document.getElementById('access-gate');
+  gate.style.transition = 'opacity .4s';
+  gate.style.opacity = '0';
+  setTimeout(()=>{ gate.style.display='none'; }, 400);
+  // إظهار زر الإدمن (يتم عبر initAccessControl)
+  checkIfAdmin(phone);
+}
+
+// ── Session المحفوظة ──
+function getSavedSession(){
+  try{
+    const s = localStorage.getItem('access_session_'+APP_VERSION);
+    return s ? JSON.parse(s) : null;
+  }catch(e){ return null; }
+}
+
+// ══════════════════════════════════════
+// ADMIN CHECK
+// ══════════════════════════════════════
+async function checkIfAdmin(phone){
+  // الإدمن يظهر زر لوحة التحكم دائماً — بناءً على session أو رقم مرجعي
+  // نعرض الزر للجميع لكن يحتاج كلمة مرور
+  document.getElementById('admin-tab-btn').style.display = 'flex';
+  // بدء polling لعداد الطلبات المعلقة
+  startAdminBadgePoll();
+}
+
+async function startAdminBadgePoll(){
+  const updateBadge = async ()=>{
+    try{
+      const pending = await getPendingData();
+      const count = pending ? Object.keys(pending).length : 0;
+      const dot = document.getElementById('admin-pending-dot');
+      if(count > 0){
+        dot.style.display = 'flex';
+        dot.textContent = count;
+      } else {
+        dot.style.display = 'none';
+      }
+    }catch(e){}
+  };
+  await updateBadge();
+  setInterval(updateBadge, 10000);
+}
+
+// ══════════════════════════════════════
+// ADMIN PANEL
+// ══════════════════════════════════════
+function openAdmin(){
+  document.getElementById('admin-overlay').classList.add('show');
+  document.getElementById('admin-pass-input').value = '';
+  document.getElementById('admin-login-err').style.display = 'none';
+  if(!adminLoggedIn){
+    document.getElementById('admin-login-section').style.display = 'block';
+    document.getElementById('admin-panel-content').style.display = 'none';
+    setTimeout(()=>document.getElementById('admin-pass-input').focus(),100);
+  } else {
+    renderAdminPanel();
+  }
+}
+
+function closeAdmin(){
+  document.getElementById('admin-overlay').classList.remove('show');
+  if(adminPollTimer){ clearInterval(adminPollTimer); adminPollTimer = null; }
+}
+
+function adminLogin(){
+  const pass = document.getElementById('admin-pass-input').value;
+  if(pass === ADMIN_PASSWORD){
+    adminLoggedIn = true;
+    document.getElementById('admin-login-section').style.display = 'none';
+    document.getElementById('admin-panel-content').style.display = 'block';
+    renderAdminPanel();
+    // polling داخل اللوحة
+    adminPollTimer = setInterval(renderAdminPanel, 8000);
+  } else {
+    document.getElementById('admin-login-err').style.display = 'block';
+    document.getElementById('admin-pass-input').select();
+  }
+}
+
+async function renderAdminPanel(){
+  try{
+    const [approved, pending, settings] = await Promise.all([
+      getApprovedData(), getPendingData(), getSettings()
+    ]);
+
+    // تحميل رقم الواتساب المحفوظ
+    if(settings && settings.waNumber){
+      const waInp = document.getElementById('admin-wa-number');
+      if(waInp && !waInp.value) waInp.value = settings.waNumber;
+    }
+
+    // طلبات الانتظار
+    const pendEl = document.getElementById('admin-pending-list');
+    const pendEntries = pending ? Object.entries(pending) : [];
+    const badge = document.getElementById('pending-count-badge');
+    badge.textContent = pendEntries.length > 0 ? pendEntries.length + ' طلب' : '';
+
+    if(pendEntries.length === 0){
+      pendEl.innerHTML = '<div class="admin-empty">لا توجد طلبات انتظار 🎉</div>';
+    } else {
+      // ترتيب حسب الوقت
+      pendEntries.sort((a,b)=>(b[1].timestamp||0)-(a[1].timestamp||0));
+      pendEl.innerHTML = `<table class="admin-phones-table">
+        <thead><tr><th>رقم الهاتف</th><th>الجهاز</th><th>وقت الطلب</th><th>إجراء</th></tr></thead>
+        <tbody>${pendEntries.map(([ph, data])=>`
+          <tr>
+            <td><b>${ph}</b></td>
+            <td style="font-size:.7rem;color:#94a3b8;direction:ltr;">${(data.deviceId||'').substr(0,12)}...</td>
+            <td style="font-size:.75rem;">${data.requestedAt||'—'}</td>
+            <td>
+              <button class="ap-btn" onclick="adminApprove('${ph}')">✅ موافقة</button>
+              <button class="rj-btn" onclick="adminReject('${ph}')">❌ رفض</button>
+              <button class="wa-notify-btn" onclick="adminWaReply('${ph}','approved')" title="إشعار واتساب">💬</button>
+            </td>
+          </tr>`).join('')}
+        </tbody>
+      </table>`;
+    }
+
+    // الأرقام المعتمدة
+    const appEl = document.getElementById('admin-approved-list');
+    const appEntries = approved ? Object.entries(approved) : [];
+    if(appEntries.length === 0){
+      appEl.innerHTML = '<div class="admin-empty">لا توجد أرقام معتمدة بعد</div>';
+    } else {
+      appEntries.sort((a,b)=>(b[1].approvedAt||0)-(a[1].approvedAt||0));
+      appEl.innerHTML = `<table class="admin-phones-table">
+        <thead><tr><th>رقم الهاتف</th><th>الاسم</th><th>الجهاز</th><th>تاريخ الموافقة</th><th>إجراء</th></tr></thead>
+        <tbody>${appEntries.map(([ph, data])=>`
+          <tr>
+            <td><b>${ph}</b></td>
+            <td>${data.name||'—'}</td>
+            <td style="font-size:.7rem;color:#94a3b8;direction:ltr;">${data.deviceId?data.deviceId.substr(0,12)+'...':'غير مرتبط'}</td>
+            <td style="font-size:.75rem;">${data.approvedDate||'—'}</td>
+            <td>
+              <button class="del-ap-btn" onclick="adminRevoke('${ph}')">🗑️ إلغاء</button>
+              <button class="del-ap-btn" onclick="adminResetDevice('${ph}')" title="إعادة تعيين الجهاز" style="margin-right:4px;">🔄</button>
+            </td>
+          </tr>`).join('')}
+        </tbody>
+      </table>`;
+    }
+  }catch(err){
+    console.error('Admin render error:', err);
+  }
+}
+
+// ── موافقة ──
+async function adminApprove(phone){
+  try{
+    const [approved, pending] = await Promise.all([getApprovedData(), getPendingData()]);
+    const pend = pending || {};
+    const app  = approved || {};
+    const now  = new Date();
+    const dateStr = now.toLocaleDateString('ar-LY') + ' ' + now.toLocaleTimeString('ar-LY',{hour:'2-digit',minute:'2-digit'});
+
+    const deviceId = pend[phone] ? pend[phone].deviceId : null;
+    app[phone] = { deviceId, approvedDate: dateStr, approvedAt: Date.now(), name: app[phone]?.name || '' };
+    delete pend[phone];
+
+    await window.storage.set(KEYS.approved, JSON.stringify(app), true);
+    await window.storage.set(KEYS.pending,  JSON.stringify(pend), true);
+
+    // إشعار واتساب للعميل (اختياري)
+    adminWaReply(phone, 'approved');
+    renderAdminPanel();
+  }catch(err){ alert('حدث خطأ: '+err.message); }
+}
+
+// ── رفض ──
+async function adminReject(phone){
+  if(!confirm('هل تريد رفض طلب الرقم: ' + phone + '؟')) return;
+  try{
+    const pending = await getPendingData();
+    const pend = pending || {};
+    delete pend[phone];
+    await window.storage.set(KEYS.pending, JSON.stringify(pend), true);
+    adminWaReply(phone, 'rejected');
+    renderAdminPanel();
+  }catch(err){ alert('حدث خطأ: '+err.message); }
+}
+
+// ── إلغاء اعتماد ──
+async function adminRevoke(phone){
+  if(!confirm('إلغاء اعتماد الرقم: ' + phone + '؟')) return;
+  try{
+    const approved = await getApprovedData();
+    const app = approved || {};
+    delete app[phone];
+    await window.storage.set(KEYS.approved, JSON.stringify(app), true);
+    renderAdminPanel();
+  }catch(err){ alert('حدث خطأ: '+err.message); }
+}
+
+// ── إعادة تعيين الجهاز ──
+async function adminResetDevice(phone){
+  if(!confirm('إعادة تعيين الجهاز المرتبط بالرقم: ' + phone + '؟\nسيتمكن أي جهاز جديد من الدخول بهذا الرقم.')) return;
+  try{
+    const approved = await getApprovedData();
+    const app = approved || {};
+    if(app[phone]) app[phone].deviceId = null;
+    await window.storage.set(KEYS.approved, JSON.stringify(app), true);
+    renderAdminPanel();
+    alert('✅ تم إعادة تعيين الجهاز. يمكن للعميل الدخول من جهاز جديد.');
+  }catch(err){ alert('حدث خطأ: '+err.message); }
+}
+
+// ── إضافة رقم يدوياً ──
+async function adminAddPhone(){
+  const phone = normalizePhone(document.getElementById('admin-new-phone').value.trim());
+  const name  = document.getElementById('admin-new-name').value.trim();
+  if(!phone || phone.length < 7){ alert('أدخل رقم هاتف صحيح'); return; }
+  try{
+    const approved = await getApprovedData();
+    const app = approved || {};
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('ar-LY') + ' ' + now.toLocaleTimeString('ar-LY',{hour:'2-digit',minute:'2-digit'});
+    app[phone] = { deviceId: null, approvedDate: dateStr, approvedAt: Date.now(), name };
+    await window.storage.set(KEYS.approved, JSON.stringify(app), true);
+    document.getElementById('admin-new-phone').value = '';
+    document.getElementById('admin-new-name').value = '';
+    renderAdminPanel();
+    alert('✅ تم إضافة الرقم ' + phone + ' بنجاح');
+  }catch(err){ alert('حدث خطأ: '+err.message); }
+}
+
+// ── حفظ إعدادات الإدمن ──
+async function saveAdminSettings(){
+  const waNum = document.getElementById('admin-wa-number').value.trim().replace(/\D/g,'');
+  if(!waNum){ alert('أدخل رقم واتساب صحيح'); return; }
+  try{
+    const settings = { waNumber: waNum };
+    await window.storage.set(KEYS.settings, JSON.stringify(settings), true);
+    const st = document.getElementById('admin-settings-status');
+    st.style.display = 'block';
+    st.textContent = '✅ تم حفظ الإعدادات — رقم الواتساب: +' + waNum;
+    setTimeout(()=>st.style.display='none', 3000);
+  }catch(err){ alert('حدث خطأ: '+err.message); }
+}
+
+// ── إشعار واتساب للعميل ──
+async function adminWaReply(phone, action){
+  const settings = await getSettings();
+  if(!settings || !settings.waNumber) return;
+  const msgApproved = `✅ تم قبول طلب دخولك لتطبيق حساب الكربوهيدرات\n📱 رقمك: ${phone}\n\nيمكنك الآن الدخول للتطبيق مباشرةً 🎉`;
+  const msgRejected = `❌ نأسف، تم رفض طلب دخولك لتطبيق حساب الكربوهيدرات\n📱 رقمك: ${phone}\n\nللاستفسار تواصل مع المشرف.`;
+  const msg = action === 'approved' ? msgApproved : msgRejected;
+  // إشعار على واتساب المشرف يبيّن الإجراء
+  const adminMsg = encodeURIComponent(
+    `${action==='approved'?'✅ تمت الموافقة':'❌ تم الرفض'} على الرقم: ${phone}\nوقت الإجراء: ${new Date().toLocaleTimeString('ar-LY',{hour:'2-digit',minute:'2-digit'})}`
+  );
+  window.location.href = `https://wa.me/${settings.waNumber}?text=${adminMsg}`;
+}
+
+// ══════════════════════════════════════
+// HELPERS — قراءة البيانات من التخزين
+// ══════════════════════════════════════
+async function getApprovedData(){
+  try{
+    const r = await window.storage.get(KEYS.approved, true);
+    return r ? JSON.parse(r.value) : {};
+  }catch(e){ return {}; }
+}
+async function getPendingData(){
+  try{
+    const r = await window.storage.get(KEYS.pending, true);
+    return r ? JSON.parse(r.value) : {};
+  }catch(e){ return {}; }
+}
+async function getSettings(){
+  try{
+    const r = await window.storage.get(KEYS.settings, true);
+    return r ? JSON.parse(r.value) : null;
+  }catch(e){ return null; }
+}
+
+// ══════════════════════════════════════
+// INIT — التحقق عند تحميل الصفحة
+// ══════════════════════════════════════
+function showGateStatus(msg, type){
+  const el = document.getElementById('gate-status');
+  el.textContent = msg;
+  el.className = 'gate-status ' + type;
+  el.style.display = 'block';
+}
+
+async function initAccessControl(){
+  const deviceId = getDeviceId();
+  const session  = getSavedSession();
+
+  if(session && session.deviceId === deviceId){
+    // تحقق سريع
+    try{
+      const approved = await getApprovedData();
+      if(approved && approved[session.phone] &&
+         (!approved[session.phone].deviceId || approved[session.phone].deviceId === deviceId)){
+        grantAccess(session.phone, deviceId);
+        return;
+      }
+    }catch(e){}
+  }
+
+  // إظهار gate
+  document.getElementById('access-gate').style.display = 'flex';
+  document.getElementById('gate-phone').focus();
+}
+
+// تشغيل نظام التحكم عند التحميل
+window.addEventListener('DOMContentLoaded', initAccessControl);
+</script>
+<script>
+// ════════════════════════════════
+// DATA
+// ════════════════════════════════
+const DATA={
+ breakfast:[
+  {n:"حليب طبيعي",      ta:240,tc:15,u:"مل",     nt:"راجع الملصق"},
+  {n:"زبادي بالفواكه",  ta:1,  tc:12,u:"قطعة",   nt:"راجع الملصق"},
+  {n:"زبادي عادي",      ta:1,  tc:6, u:"قطعة"},
+  {n:"لبن طبيعي",       ta:240,tc:15,u:"مل",     nt:"راجع الملصق"},
+  {n:"كورن فلكس",       ta:100,tc:85,u:"جرام",   nt:"راجع الملصق"},
+  {n:"خبزة عادية",      ta:30, tc:15,u:"جرام"},
+  {n:"خبزة شعير",       ta:30, tc:15,u:"جرام"},
+  {n:"بريوش",           ta:30, tc:15,u:"جرام"},
+  {n:"خبزة مصرية/شامية",ta:30, tc:15,u:"جرام"},
+  {n:"بان كيك",         ta:1,  tc:15,u:"قطعة"},
+  {n:"قرسيني",          ta:2,  tc:15,u:"إصبع"},
+  {n:"بسكويت مالح مربع",ta:3,  tc:15,u:"قطعة"},
+  {n:"بسكويت داي جستف", ta:1.5,tc:15,u:"قطعة",  nt:"راجع الملصق"},
+  {n:"بسكويت التمر",    ta:1,  tc:15,u:"قطعة كبيرة",nt:"راجع الملصق"},
+  {n:"بسبوسة",          ta:50, tc:15,u:"جرام"},
+  {n:"مسحوق الكاكاو",   ta:100,tc:15,u:"جرام",  nt:"راجع الملصق"},
+  {n:"مسحوق القهوة",    ta:50, tc:15,u:"جرام"},
+  {n:"الشامية",         ta:15, tc:10,u:"جرام",  nt:"راجع الملصق"},
+  {n:"عسل",             ta:1,  tc:15,u:"ملعقة كبيرة"},
+  {n:"رب",              ta:1,  tc:15,u:"ملعقة كبيرة"},
+  {n:"مربى",            ta:1,  tc:15,u:"ملعقة كبيرة"},
+  {n:"سكر",             ta:1,  tc:15,u:"ملعقة كبيرة"},
+ ],
+ main:[
+  {n:"الكسكسي",         ta:6,  tc:15,u:"ملعقة كبيرة"},
+  {n:"الأرز",           ta:4,  tc:15,u:"ملعقة كبيرة"},
+  {n:"المكرونة",        ta:5,  tc:15,u:"ملعقة كبيرة"},
+  {n:"رشتة كسكاس",      ta:4,  tc:15,u:"ملعقة كبيرة"},
+  {n:"رشتة البرمة",     ta:5,  tc:15,u:"ملعقة كبيرة"},
+  {n:"فول مدمس",        ta:100,tc:20,u:"جرام",  nt:"راجع الملصق"},
+  {n:"امبطن",           ta:1,  tc:15,u:"قطعة متوسطة"},
+  {n:"كفته",            ta:1,  tc:15,u:"قطعة متوسطة"},
+  {n:"بوريك",           ta:1,  tc:15,u:"قطعة متوسطة"},
+  {n:"ضولمة",           ta:2,  tc:15,u:"قطعة كبيرة"},
+  {n:"محشي فليفلة",     ta:1,  tc:15,u:"قطعة متوسطة"},
+  {n:"محشي كوسة",       ta:1,  tc:15,u:"قطعة متوسطة"},
+  {n:"محشي بذنجان",     ta:1,  tc:15,u:"قطعة متوسطة"},
+  {n:"محشي ورق عنب",    ta:6,  tc:15,u:"قطعة كبيرة"},
+  {n:"شربة",            ta:4,  tc:15,u:"ملعقة كبيرة"},
+  {n:"طعمية",           ta:3,  tc:15,u:"قطعة"},
+  {n:"الدشيشة",         ta:6,  tc:15,u:"ملعقة كبيرة"},
+  {n:"فاصولياء",        ta:2,  tc:15,u:"ملعقة كبيرة"},
+  {n:"اللوبياء الخضراء",ta:100,tc:10,u:"جرام"},
+  {n:"عدس",             ta:100,tc:60,u:"جرام"},
+  {n:"شربة عدس",        ta:240,tc:10,u:"مل"},
+  {n:"شربة شوفان",      ta:240,tc:20,u:"مل"},
+  {n:"بازين",           ta:100,tc:20,u:"جرام"},
+  {n:"شربة جاهزة (ماجي)",ta:350,tc:20,u:"مل"},
+ ],
+ fruits:[
+  {n:"تفاح",   ta:100,tc:15,u:"جرام"},{n:"برتقال",  ta:100,tc:10,u:"جرام"},
+  {n:"كمثرى",  ta:100,tc:15,u:"جرام"},{n:"تمر",     ta:100,tc:70,u:"جرام"},
+  {n:"خوخ",    ta:100,tc:10,u:"جرام"},{n:"عوينه",   ta:100,tc:10,u:"جرام"},
+  {n:"عنب",    ta:100,tc:15,u:"جرام"},{n:"تين",     ta:100,tc:10,u:"جرام"},
+  {n:"مشمش",   ta:100,tc:10,u:"جرام"},{n:"فراولة",  ta:100,tc:10,u:"جرام"},
+  {n:"دلاع",   ta:100,tc:10,u:"جرام"},{n:"قلعاوي",  ta:100,tc:5, u:"جرام"},
+  {n:"جريب فروت",ta:100,tc:7,u:"جرام"},{n:"جوافه",  ta:100,tc:10,u:"جرام"},
+  {n:"رمان",   ta:100,tc:15,u:"جرام"},{n:"مانجا",   ta:100,tc:15,u:"جرام"},
+  {n:"كيوي",   ta:100,tc:15,u:"جرام"},{n:"موز",     ta:100,tc:25,u:"جرام"},
+  {n:"أناناس", ta:2,  tc:10,u:"شريحة"},{n:"أناناس معلب",ta:100,tc:15,u:"جرام"},
+  {n:"توت",    ta:100,tc:15,u:"جرام"},{n:"كرز",     ta:100,tc:40,u:"جرام"},
+  {n:"بلح",    ta:100,tc:10,u:"جرام"},{n:"ليمون",   ta:100,tc:10,u:"جرام"},
+  {n:"الليم الكيني",ta:100,tc:10,u:"جرام"},{n:"باباي",ta:100,tc:5,u:"جرام"},
+  {n:"أفوكادو",ta:100,tc:20,u:"جرام"},{n:"قصب السكر",ta:100,tc:10,u:"جرام"},
+  {n:"الناسبولي",ta:100,tc:20,u:"جرام"},{n:"العنابي",ta:100,tc:15,u:"جرام"},
+  {n:"سفرجل",  ta:100,tc:15,u:"جرام"},{n:"التين الشوكي",ta:100,tc:15,u:"جرام"},
+  {n:"زبيب جاف",ta:100,tc:7,u:"جرام"},{n:"مشمش مجفف",ta:100,tc:10,u:"جرام"},
+  {n:"الكاكا", ta:100,tc:15,u:"جرام"},{n:"تين مجفف",ta:100,tc:15,u:"جرام"},
+ ],
+ nuts:[
+  {n:"حمص",            ta:100,tc:55,u:"جرام"},{n:"فستق",           ta:100,tc:15,u:"جرام"},
+  {n:"بندق",           ta:100,tc:10,u:"جرام"},{n:"كاكاوية",        ta:100,tc:20,u:"جرام"},
+  {n:"كاجو",           ta:100,tc:25,u:"جرام"},{n:"سمسم",           ta:100,tc:15,u:"جرام"},
+  {n:"لوز أبيض",       ta:100,tc:20,u:"جرام"},{n:"لوز أخضر",       ta:100,tc:10,u:"جرام"},
+  {n:"قصتل",           ta:100,tc:40,u:"جرام"},{n:"جوز الهند",      ta:100,tc:15,u:"جرام"},
+  {n:"صنوبر",          ta:100,tc:5, u:"جرام"},{n:"عباد الشمس",     ta:100,tc:15,u:"جرام"},
+  {n:"لوز خزائني",     ta:100,tc:15,u:"جرام"},{n:"زبيب",           ta:100,tc:75,u:"جرام"},
+  {n:"سامينسا",        ta:100,tc:15,u:"جرام"},{n:"بذور الدلاع",    ta:100,tc:10,u:"جرام"},
+  {n:"جوز الهند مبشور",ta:100,tc:10,u:"جرام"},{n:"لوز البرازيلي",  ta:100,tc:5, u:"جرام"},
+ ],
+ veggies:[
+  {n:"اللوبيا الخضراء",ta:100,tc:10,u:"جرام"},{n:"الفول الأخضر",  ta:100,tc:15,u:"جرام"},
+  {n:"البازيلاء",      ta:100,tc:15,u:"جرام"},{n:"بطاطس",          ta:100,tc:20,u:"جرام"},
+  {n:"بطاطا حلوة",     ta:100,tc:30,u:"جرام"},{n:"فاصولياء",       ta:100,tc:15,u:"جرام"},
+  {n:"ورق عنب",        ta:100,tc:15,u:"جرام"},{n:"ثوم",            ta:100,tc:25,u:"جرام"},
+  {n:"ذرة شامية",      ta:100,tc:20,u:"جرام"},{n:"البنجر",         ta:100,tc:10,u:"جرام"},
+  {n:"فول ناشف",       ta:100,tc:55,u:"جرام"},{n:"لوبية جافة",     ta:100,tc:55,u:"جرام"},
+  {n:"حمص مرحي",       ta:100,tc:60,u:"جرام"},{n:"حلبة",           ta:100,tc:50,u:"جرام"},
+  {n:"عدس",            ta:100,tc:60,u:"جرام"},{n:"حمص",            ta:100,tc:55,u:"جرام"},
+  {n:"قرعة حمراء",     ta:100,tc:10,u:"جرام"},{n:"الجزر المطبوخ",  ta:100,tc:10,u:"جرام"},
+ ],
+ fast:[
+  {n:"شاورما",          ta:1,tc:60, u:"وحدة",  nt:"بدون بطاطا"},
+  {n:"شاورما بالبطاطا", ta:1,tc:120,u:"وحدة"},
+  {n:"ساندوتش سكالوب",  ta:1,tc:55, u:"واحد",  nt:"بدون بطاطا مقلية"},
+  {n:"طابونة",          ta:1,tc:100,u:"واحد"},
+  {n:"برغر",            ta:1,tc:40, u:"واحد"},
+ ],
+ misc:[
+  {n:"قصب",            ta:4,  tc:15, u:"ملعقة كبيرة"},
+  {n:"بيتزا",          ta:1,  tc:15, u:"⅛ الدائرة الكبيرة"},
+  {n:"فوشار",          ta:100,tc:10, u:"جرام"},
+  {n:"جيلاتي الكوب",   ta:1,  tc:15, u:"مغرفة"},
+  {n:"جيلاتي طربوش",   ta:1,  tc:20, u:"قطعة"},
+  {n:"البقلاوة",       ta:100,tc:50, u:"جرام"},
+  {n:"تشيز كيك",       ta:80, tc:20, u:"جرام"},
+  {n:"ذرة جافة",       ta:100,tc:65, u:"جرام"},
+  {n:"نشأ الأرز",      ta:100,tc:85, u:"جرام"},
+  {n:"رز مرحي",        ta:100,tc:80, u:"جرام"},
+  {n:"دقيق الشعير",    ta:100,tc:70, u:"جرام"},
+  {n:"دقيق أبيض",      ta:100,tc:75, u:"جرام"},
+  {n:"دقيق الصويا",    ta:100,tc:30, u:"جرام"},
+  {n:"قمح حبوب",       ta:100,tc:70, u:"جرام"},
+  {n:"حمص مرحي",       ta:100,tc:60, u:"جرام"},
+  {n:"كاتشب",          ta:200,tc:5,  u:"جرام"},
+  {n:"سكر",            ta:100,tc:200,u:"جرام"},
+  {n:"البرغل",         ta:100,tc:70, u:"جرام"},
+  {n:"بسيسة صافية",    ta:100,tc:30, u:"جرام"},
+  {n:"مشروب غازي",     ta:100,tc:10, u:"مل",   nt:"راجع الملصق"},
+  {n:"الزلابية",       ta:100,tc:85, u:"جرام"},
+  {n:"الشوفان",        ta:100,tc:65, u:"جرام"},
+  {n:"دقيق الذرة",     ta:100,tc:75, u:"جرام"},
+  {n:"دقيق الشوفان",   ta:100,tc:65, u:"جرام"},
+ ]
+};
+
+const GRIDS={breakfast:'bg',main:'mg',fruits:'fg',nuts:'ng',veggies:'vg',fast:'ftg',misc:'xg'};
+
+// ════════════════════════════════
+// STATE
+// ════════════════════════════════
+let profile={name:'',icr:0,target:120,isf:0};
+let cart={};
+let _mealDose=0, _corrDose=0;
+
+// ════════════════════════════════
+// PROFILE
+// ════════════════════════════════
+async function saveProfile(){
+  const nameVal=document.getElementById('pf-name').value.trim();
+  const icrVal =parseFloat(document.getElementById('pf-icr').value)||0;
+  const tgtVal =parseFloat(document.getElementById('pf-target').value)||120;
+  const isfVal =parseFloat(document.getElementById('pf-isf').value)||0;
+
+  if(!nameVal){
+    const ok=document.getElementById('pf-ok');
+    ok.style.display='block';
+    ok.style.color='#ef4444';
+    ok.textContent='⚠️ أدخل اسم الحالة أولاً';
+    setTimeout(()=>{ok.style.display='none';ok.style.color='';ok.textContent='✅ تم الحفظ!';},2500);
+    return;
+  }
+
+  profile.name  =nameVal;
+  profile.icr   =icrVal;
+  profile.target=tgtVal;
+  profile.isf   =isfVal;
+
+  const ok=document.getElementById('pf-ok');
+  ok.style.display='block';
+  ok.style.color='#0f766e';
+  ok.textContent='⏳ جارٍ الحفظ...';
+
+  try {
+    // Generate or reuse a unique client ID stored locally
+    let clientId=localStorage.getItem('carb_client_id');
+    if(!clientId){
+      clientId='c_'+Date.now()+'_'+Math.random().toString(36).substr(2,6);
+      localStorage.setItem('carb_client_id',clientId);
+    }
+
+    const isNew=!localStorage.getItem('carb_registered');
+    const now=new Date();
+    const dateStr=now.toLocaleDateString('ar-LY')+' '+now.toLocaleTimeString('ar-LY',{hour:'2-digit',minute:'2-digit'});
+
+    const clientData={
+      name:nameVal,
+      icr:icrVal,
+      target:tgtVal,
+      isf:isfVal,
+      date:dateStr,
+      clientId
+    };
+
+    // Save this client's data (shared — visible to all)
+    await window.storage.set('client:'+clientId, JSON.stringify(clientData), true);
+
+    // Increment global counter only on first-time save
+    if(isNew){
+      let countResult=null;
+      try{ countResult=await window.storage.get('global_count',true); }catch(e){}
+      const prev=countResult?parseInt(countResult.value)||0:0;
+      await window.storage.set('global_count',String(prev+1),true);
+      localStorage.setItem('carb_registered','1');
+    }
+
+    // Save profile locally too
+    localStorage.setItem('carb_profile',JSON.stringify(profile));
+
+    ok.textContent='✅ تم الحفظ بنجاح!';
+    setTimeout(()=>ok.style.display='none',2500);
+
+    // Refresh counter and clients list
+    await loadCounter();
+    await loadClients();
+  } catch(err){
+    ok.style.color='#ef4444';
+    ok.textContent='⚠️ تم الحفظ محلياً فقط';
+    setTimeout(()=>ok.style.display='none',3000);
+    // fallback: save locally
+    localStorage.setItem('carb_profile',JSON.stringify(profile));
+  }
+
+  refreshBanners(); fillProfileFields();
+  renderCart();
+}
+
+function refreshBanners(){
+  ['bldr-banner','ins-banner'].forEach(id=>{
+    const el=document.getElementById(id); if(!el)return;
+    if(profile.icr||profile.isf){
+      el.className='profile-banner';
+      el.querySelector('.profile-name').textContent='👤 '+(profile.name||'الحالة');
+      let pp=el.querySelector('.profile-pills');
+      if(!pp){pp=document.createElement('div');pp.className='profile-pills';el.insertBefore(pp,el.querySelector('.pf-edit-btn'));}
+      pp.innerHTML=(profile.icr?`<span class="ppill">ICR: ${profile.icr}</span>`:'')
+                  +(profile.target?`<span class="ppill">الهدف: ${profile.target}</span>`:'')
+                  +(profile.isf?`<span class="ppill">ISF: ${profile.isf}</span>`:'');
+    } else {
+      el.className='profile-banner empty';
+      el.querySelector('.profile-name').textContent='⚠️ لم تُدخل بيانات الحالة بعد';
+      const pp=el.querySelector('.profile-pills'); if(pp)pp.innerHTML='';
+    }
+  });
+}
+
+function fillProfileFields(){
+  if(profile.icr){const e=document.getElementById('md-icr');if(e){e.value=profile.icr;e.classList.add('fromP');document.getElementById('md-icr-note').textContent='✔ من بيانات الحالة';}}
+  if(profile.target){const e=document.getElementById('cd-target');if(e){e.value=profile.target;e.classList.add('fromP');document.getElementById('cd-target-note').textContent='✔ من بيانات الحالة';}}
+  if(profile.isf){const e=document.getElementById('cd-isf');if(e){e.value=profile.isf;e.classList.add('fromP');document.getElementById('cd-isf-note').textContent='✔ من بيانات الحالة';}}
+}
+
+// ════════════════════════════════
+// RENDER GRIDS
+// ════════════════════════════════
+function renderGrid(cat){
+  const gridId=GRIDS[cat];
+  const el=document.getElementById(gridId);
+  if(!el)return;
+  el.innerHTML=DATA[cat].map((item,i)=>{
+    const id=`${cat}-${i}`;
+    const ic=cart[id];
+    return`<div class="food-card ${ic?'selected':''}" id="fcard-${id}">
+      <div class="fc-top">
+        <div class="fc-info">
+          <div class="fc-name">${item.n}</div>
+          <div class="fc-meta">${item.tc} كارب / ${item.ta} ${item.u}${item.nt?' · '+item.nt:''}</div>
+        </div>
+        <div class="fc-badge ${ic?'added':''}" onclick="toggleRow('${id}')">
+          ${ic?'✓ تعديل':'+ إضافة'}
+        </div>
+      </div>
+      <div class="fc-row ${ic?'show':''}" id="row-${id}">
+        <label>الكمية (${item.u}):</label>
+        <input type="number" id="inp-${id}" min="0" step="0.1"
+               value="${ic?ic.ea:''}" placeholder="${item.ta}"
+               oninput="prevCarb('${id}',${item.ta},${item.tc})">
+        <span class="fc-prev" id="prev-${id}">${ic?ic.ct.toFixed(1)+' كارب':''}</span>
+        <button class="fc-add" onclick="addCart('${id}',${i},'${cat}',${item.ta},${item.tc},'${item.n}','${item.u}')">${ic?'تحديث':'إضافة'}</button>
+        ${ic?`<button class="fc-del" onclick="delCart('${id}')">✕</button>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderAll(){ Object.keys(GRIDS).forEach(renderGrid); }
+function filterGrid(gridId,q){
+  document.querySelectorAll(`#${gridId} .food-card`).forEach(c=>{
+    c.style.display=(!q||c.querySelector('.fc-name').textContent.toLowerCase().includes(q.toLowerCase()))?'':'none';
+  });
+}
+
+// ════════════════════════════════
+// AMOUNT ROW
+// ════════════════════════════════
+function toggleRow(id){
+  const r=document.getElementById('row-'+id); if(!r)return;
+  r.classList.toggle('show');
+  if(r.classList.contains('show')){const i=document.getElementById('inp-'+id);if(i)setTimeout(()=>i.focus(),40);}
+}
+function prevCarb(id,ta,tc){
+  const v=parseFloat(document.getElementById('inp-'+id).value);
+  const p=document.getElementById('prev-'+id);
+  if(!p)return;
+  p.textContent=(v>0)?(v*tc/ta).toFixed(1)+' كارب':'';
+}
+
+// ════════════════════════════════
+// CART
+// ════════════════════════════════
+function addCart(id,idx,cat,ta,tc,name,unit){
+  const inp=document.getElementById('inp-'+id);
+  const v=parseFloat(inp?inp.value:0);
+  if(!v||v<=0){inp&&inp.focus();return;}
+  const ct=parseFloat((v*tc/ta).toFixed(2));
+  cart[id]={name,unit,ta,tc,ea:v,ct};
+  renderAll(); renderCart();
+}
+function delCart(id){ delete cart[id]; renderAll(); renderCart(); }
+function clearCart(){ cart={}; extProducts={}; renderAll(); renderExtList(); renderCart(); }
+
+// ════════════════════════════════
+// EXTERNAL PRODUCTS
+// ════════════════════════════════
+let extProducts={};
+let extCounter=0;
+
+function addExtProduct(){
+  const nameEl=document.getElementById('ext-name');
+  const carbEl=document.getElementById('ext-carb');
+  const name=nameEl.value.trim();
+  const carb=parseFloat(carbEl.value);
+  if(!name){nameEl.focus();nameEl.style.borderColor='#ef4444';setTimeout(()=>nameEl.style.borderColor='',1500);return;}
+  if(!carb||carb<=0){carbEl.focus();carbEl.style.borderColor='#ef4444';setTimeout(()=>carbEl.style.borderColor='',1500);return;}
+  const id='ext-'+Date.now()+'-'+(extCounter++);
+  extProducts[id]={name,ct:parseFloat(carb.toFixed(2))};
+  nameEl.value=''; carbEl.value='';
+  renderExtList(); renderCart();
+}
+
+function delExtProduct(id){
+  delete extProducts[id];
+  renderExtList(); renderCart();
+}
+
+function renderExtList(){
+  const list=document.getElementById('ext-list');
+  const empty=document.getElementById('ext-empty');
+  if(!list)return;
+  const keys=Object.keys(extProducts);
+  if(!keys.length){
+    list.innerHTML='<div class="ext-empty" id="ext-empty">لم تُضف أي منتجات خارجية بعد.</div>';
+    return;
+  }
+  list.innerHTML=keys.map(id=>{
+    const it=extProducts[id];
+    return`<div class="ext-item">
+      <span class="ext-item-name">🛒 ${it.name}</span>
+      <span class="ext-item-carb">${it.ct.toFixed(1)} جرام كارب</span>
+      <button class="ext-item-del" onclick="delExtProduct('${id}')">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function renderCart(){
+  const iEl=document.getElementById('cart-items');
+  const tEl=document.getElementById('cart-total');
+  const cEl=document.getElementById('bldr-calc');
+  const keys=Object.keys(cart);
+  const extKeys=Object.keys(extProducts);
+  if(!keys.length && !extKeys.length){
+    iEl.innerHTML='<div class="cart-empty">اختر أصنافاً من تبويبات الطعام وأدخل الكمية لإضافتها هنا.</div>';
+    tEl.style.display='none'; if(cEl)cEl.style.display='none'; return;
+  }
+  let total=0;
+  let html=keys.map(id=>{
+    const it=cart[id]; total+=it.ct;
+    return`<div class="ci">
+      <div style="flex:1">
+        <div class="ci-name">${it.name}</div>
+        <div class="ci-detail">${it.ea} ${it.unit} × ${it.tc} ÷ ${it.ta} = ${it.ct.toFixed(1)} جرام كارب</div>
+      </div>
+      <span class="ci-carb">${it.ct.toFixed(1)} جرام</span>
+      <button class="ci-del" onclick="delCart('${id}')">✕</button>
+    </div>`;
+  }).join('');
+  // Add external products to cart display
+  html+=extKeys.map(id=>{
+    const it=extProducts[id]; total+=it.ct;
+    return`<div class="ci">
+      <div style="flex:1">
+        <div class="ci-name">🛒 ${it.name}</div>
+        <div class="ci-detail" style="color:#d97706;">منتج خارجي · ${it.ct.toFixed(1)} جرام كارب</div>
+      </div>
+      <span class="ci-carb" style="color:#d97706;">${it.ct.toFixed(1)} جرام</span>
+      <button class="ci-del" onclick="delExtProduct('${id}')">✕</button>
+    </div>`;
+  }).join('');
+  iEl.innerHTML=html;
+  total=parseFloat(total.toFixed(2));
+  document.getElementById('total-carbs-display').textContent=total+' جرام';
+  tEl.style.display='flex';
+  if(cEl){cEl.style.display='block'; renderBldrDose(total);}
+}
+
+function renderBldrDose(total){
+  const el=document.getElementById('bldr-dose'); if(!el)return;
+  if(!profile.icr){
+    el.innerHTML=`<div class="rb amber"><div class="rb-num" style="font-size:1rem">⚠️ أدخل عامل الكارب (ICR) في بيانات الحالة</div></div>`; return;
+  }
+  _mealDose=parseFloat((total/profile.icr).toFixed(1));
+  el.innerHTML=`<div class="rb teal">
+    <div class="rb-num">${_mealDose} وحدة</div>
+    <div class="rb-lbl">جرعة أنسولين الوجبة</div>
+    <div class="rb-steps">${total} جرام ÷ ${profile.icr} (ICR) = ${_mealDose} وحدة</div>
+  </div>`;
+  calcBDCorr();
+}
+
+function calcBDCorr(){
+  const rEl=document.getElementById('bd-reading');
+  const cEl=document.getElementById('bd-corr');
+  const tEl=document.getElementById('bd-total');
+  if(!cEl||!tEl)return;
+  const reading=parseFloat(rEl?rEl.value:0);
+  if(!reading||!profile.isf||!profile.target){cEl.innerHTML='';tEl.innerHTML='';return;}
+  const diff=reading-profile.target;
+  if(diff<=0){
+    cEl.innerHTML=`<div class="rb green"><div class="rb-num">السكر ضمن الهدف ✓</div><div class="rb-lbl">لا جرعة تصحيحية (${reading} ≤ ${profile.target})</div></div>`;
+    tEl.innerHTML=''; _corrDose=0; return;
+  }
+  _corrDose=parseFloat((diff/profile.isf).toFixed(1));
+  cEl.innerHTML=`<div class="rb amber">
+    <div class="rb-num">${_corrDose} وحدة</div>
+    <div class="rb-lbl">جرعة تصحيحية</div>
+    <div class="rb-steps">(${reading} − ${profile.target}) ÷ ${profile.isf} = ${_corrDose} وحدة</div>
+  </div>`;
+  const grand=(_mealDose+_corrDose).toFixed(1);
+  tEl.innerHTML=`<div class="rb purple" style="margin-top:9px">
+    <div class="rb-num">${grand} وحدة</div>
+    <div class="rb-lbl">الجرعة الإجمالية (وجبة + تصحيح)</div>
+    <div class="rb-steps">وجبة ${_mealDose} + تصحيح ${_corrDose} = ${grand} وحدة</div>
+  </div>`;
+}
+
+// ════════════════════════════════
+// INSULIN TAB CALCS
+// ════════════════════════════════
+function calcSC(){
+  const tc=parseFloat(document.getElementById('sc-tc').value);
+  const ta=parseFloat(document.getElementById('sc-ta').value);
+  const aa=parseFloat(document.getElementById('sc-aa').value);
+  const el=document.getElementById('sc-res');
+  if(!tc||!ta||!aa){el.innerHTML='';return;}
+  const r=(aa*tc/ta).toFixed(2);
+  el.innerHTML=`<div class="rb teal">
+    <div class="rb-num">${r} جرام كارب</div>
+    <div class="rb-lbl">الكربوهيدرات في الكمية المتناولة</div>
+    <div class="rb-steps">${aa} × ${tc} ÷ ${ta} = ${r} جرام كارب</div>
+  </div>`;
+}
+
+function calcMD(){
+  const carbs=parseFloat(document.getElementById('md-carbs').value);
+  const icr  =parseFloat(document.getElementById('md-icr').value)||profile.icr;
+  const el   =document.getElementById('md-res');
+  if(!carbs||!icr){el.innerHTML=`<div class="rb red"><div class="rb-num" style="font-size:1rem">أدخل الكمية وعامل الكارب</div></div>`;return;}
+  _mealDose=parseFloat((carbs/icr).toFixed(1));
+  el.innerHTML=`<div class="rb teal">
+    <div class="rb-num">${_mealDose} وحدة</div>
+    <div class="rb-lbl">جرعة أنسولين الوجبة</div>
+    <div class="rb-steps">${carbs} جرام ÷ ${icr} (ICR) = ${_mealDose} وحدة</div>
+  </div>`;
+  updateTotal();
+}
+
+function calcCD(){
+  const reading=parseFloat(document.getElementById('cd-reading').value);
+  const target =parseFloat(document.getElementById('cd-target').value)||profile.target;
+  const isf    =parseFloat(document.getElementById('cd-isf').value)||profile.isf;
+  const el     =document.getElementById('cd-res');
+  if(!reading||!target||!isf){el.innerHTML=`<div class="rb red"><div class="rb-num" style="font-size:1rem">أدخل جميع القيم</div></div>`;return;}
+  const diff=reading-target;
+  if(diff<=0){
+    el.innerHTML=`<div class="rb green"><div class="rb-num">السكر ضمن الهدف ✓</div><div class="rb-lbl">لا جرعة تصحيحية (${reading} ≤ ${target})</div></div>`;
+    _corrDose=0; updateTotal(); return;
+  }
+  _corrDose=parseFloat((diff/isf).toFixed(1));
+  el.innerHTML=`<div class="rb amber">
+    <div class="rb-num">${_corrDose} وحدة</div>
+    <div class="rb-lbl">جرعة تصحيحية</div>
+    <div class="rb-steps">(${reading} − ${target}) ÷ ${isf} = ${_corrDose} وحدة</div>
+  </div>`;
+  updateTotal();
+}
+
+function updateTotal(){
+  const el=document.getElementById('total-res'); if(!el)return;
+  if(!_mealDose&&!_corrDose){el.innerHTML='';return;}
+  const g=(_mealDose+_corrDose).toFixed(1);
+  el.innerHTML=`<div class="rb purple">
+    <div class="rb-num">${g} وحدة</div>
+    <div class="rb-lbl">الجرعة الإجمالية</div>
+    <div class="rb-steps">وجبة ${_mealDose} + تصحيح ${_corrDose} = ${g} وحدة</div>
+  </div>`;
+}
+
+// ════════════════════════════════
+// TABS
+// ════════════════════════════════
+function showTab(name,btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  if(btn)btn.classList.add('active');
+  if(name==='insulin')fillProfileFields();
+}
+
+// ════════════════════════════════
+// COUNTER — Real shared storage
+// ════════════════════════════════
+async function loadCounter(){
+  const el=document.getElementById('global-counter');
+  if(!el)return;
+  try{
+    const res=await window.storage.get('global_count',true);
+    const count=res?parseInt(res.value)||0:0;
+    // Animate counter update
+    const current=parseInt(el.textContent)||0;
+    if(count!==current){
+      el.style.transition='all .3s';
+      el.style.transform='scale(1.3)';
+      el.style.color='#0d9488';
+      el.textContent=count;
+      setTimeout(()=>{el.style.transform='';el.style.color='';},400);
+    } else {
+      el.textContent=count;
+    }
+  } catch(e){
+    // Fallback: use local count
+    const local=parseInt(localStorage.getItem('carb_app_count')||'0');
+    el.textContent=local||'---';
+  }
+}
+
+async function initCounter(){
+  // Also load saved profile from localStorage if exists
+  const saved=localStorage.getItem('carb_profile');
+  if(saved){
+    try{
+      const p=JSON.parse(saved);
+      profile=Object.assign(profile,p);
+      if(p.name) document.getElementById('pf-name').value=p.name||'';
+      if(p.icr)  document.getElementById('pf-icr').value=p.icr||'';
+      if(p.target) document.getElementById('pf-target').value=p.target||120;
+      if(p.isf)  document.getElementById('pf-isf').value=p.isf||'';
+      refreshBanners(); fillProfileFields();
+    }catch(e){}
+  }
+  await loadCounter();
+  await loadClients();
+}
+
+// ════════════════════════════════
+// CLIENTS LIST
+// ════════════════════════════════
+async function loadClients(){
+  try{
+    const keysRes=await window.storage.list('client:',true);
+    if(!keysRes||!keysRes.keys||keysRes.keys.length===0){
+      document.getElementById('clients-panel').style.display='none';
+      return;
+    }
+    const clients=[];
+    for(const key of keysRes.keys){
+      try{
+        const r=await window.storage.get(key,true);
+        if(r&&r.value) clients.push(JSON.parse(r.value));
+      }catch(e){}
+    }
+    if(clients.length===0){document.getElementById('clients-panel').style.display='none';return;}
+    // Sort by date desc (by clientId timestamp)
+    clients.sort((a,b)=>(b.clientId||'').localeCompare(a.clientId||''));
+    const panel=document.getElementById('clients-panel');
+    panel.style.display='block';
+    const list=document.getElementById('clients-list');
+    list.innerHTML=`
+      <table class="clients-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>الاسم</th>
+            <th>ICR</th>
+            <th>الهدف</th>
+            <th>ISF</th>
+            <th>التاريخ</th>
+            <th>إجراء</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${clients.map((c,i)=>`
+            <tr>
+              <td>${i+1}</td>
+              <td><b>${c.name||'—'}</b></td>
+              <td>${c.icr||'—'}</td>
+              <td>${c.target||'—'}</td>
+              <td>${c.isf||'—'}</td>
+              <td style="font-size:.7rem;color:var(--text-light)">${c.date||'—'}</td>
+              <td>
+                <button class="ct-load-btn" onclick="loadClient(${JSON.stringify(c).replace(/"/g,'&quot;')})">تحميل</button>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+      <p style="font-size:.72rem;color:var(--text-light);margin-top:10px;text-align:center;">إجمالي العملاء المسجلين: <b>${clients.length}</b></p>
+    `;
+  }catch(e){
+    document.getElementById('clients-panel').style.display='none';
+  }
+}
+
+function loadClient(c){
+  profile.name=c.name||''; profile.icr=c.icr||0;
+  profile.target=c.target||120; profile.isf=c.isf||0;
+  document.getElementById('pf-name').value=profile.name;
+  document.getElementById('pf-icr').value=profile.icr||'';
+  document.getElementById('pf-target').value=profile.target;
+  document.getElementById('pf-isf').value=profile.isf||'';
+  refreshBanners(); fillProfileFields(); renderCart();
+  const ok=document.getElementById('pf-ok');
+  ok.style.display='block'; ok.style.color='#0f766e';
+  ok.textContent='✅ تم تحميل بيانات '+profile.name;
+  setTimeout(()=>ok.style.display='none',2500);
+}
+
+// ════════════════════════════════
+// DAILY SNACK RECIPES
+// ════════════════════════════════
+const ALL_SNACKS=[
+  {emoji:'🥚',title:'بيض مسلوق بالأفوكادو',ing:'• بيضتان مسلوقتان\n• نصف حبة أفوكادو\n• ملح وفلفل أسود\n• عصير ليمون',tip:'0 كارب — بروتين عالٍ'},
+  {emoji:'🧀',title:'جبنة مع خيار وزيتون',ing:'• شرائح جبنة بيضاء\n• خيارة مقطعة\n• حبات زيتون أخضر\n• زيت زيتون',tip:'أقل من 2 كارب'},
+  {emoji:'🥑',title:'أفوكادو بالتن',ing:'• حبة أفوكادو مقطعة\n• علبة تن صغيرة مصفاة\n• ليمون وملح\n• فلفل أحمر مجفف',tip:'0 كارب تقريباً'},
+  {emoji:'🥩',title:'شرائح لحم بالأعشاب',ing:'• شرائح لحم مشوي\n• ثوم وإكليل الجبل\n• زيت زيتون\n• ملح وفلفل',tip:'0 كارب — بروتين خالص'},
+  {emoji:'🥜',title:'لوز محمص بالتوابل',ing:'• حفنة لوز خام\n• ملح وكمون\n• زيت جوز الهند\n• فلفل حار (اختياري)',tip:'5 كارب / 30 جرام'},
+  {emoji:'🥗',title:'سلطة خضراء بالجبنة',ing:'• خس وجرجير\n• طماطم كرزية\n• جبنة فيتا مفتتة\n• زيت وخل بلسمي',tip:'3 كارب فقط'},
+  {emoji:'🍳',title:'أومليت بالخضار',ing:'• بيضتان\n• فلفل ملون مفروم\n• جبنة مبشورة\n• ملح وبهارات',tip:'2 كارب'},
+  {emoji:'🥬',title:'ورق خس محشو بالتن',ing:'• أوراق خس كبيرة\n• تن أبيض مصفى\n• مايونيز خفيف\n• خيار مفروم',tip:'1 كارب تقريباً'},
+  {emoji:'🫐',title:'زبادي يوناني بالتوت',ing:'• زبادي يوناني (100 جرام)\n• حبات توت أو فراولة\n• قرفة مطحونة\n• عسل قطرة واحدة',tip:'6 كارب'},
+  {emoji:'🥚',title:'بيض مقلي بالسبانخ',ing:'• بيضتان\n• حفنة سبانخ طازجة\n• ثوم مفروم\n• زيت زيتون',tip:'1 كارب'},
+  {emoji:'🧄',title:'جمبري مشوي بالثوم',ing:'• جمبري متوسط الحجم\n• ثوم وليمون\n• زبدة وبقدونس\n• ملح وفلفل',tip:'0 كارب'},
+  {emoji:'🥩',title:'كرات لحم مشوية',ing:'• لحم مفروم\n• بصل مفروم ناعم\n• بهارات مشكلة\n• ملح وفلفل',tip:'0 كارب'},
+  {emoji:'🫒',title:'صحن زيتون وجبنة',ing:'• زيتون أخضر وأسود\n• جبنة بيضاء مكعبات\n• زعتر مجفف\n• زيت زيتون بكر',tip:'1 كارب'},
+  {emoji:'🥦',title:'بروكلي بالجبنة',ing:'• بروكلي مطبوخ بالبخار\n• جبنة شيدر مبشورة\n• ثوم مطبوخ\n• فلفل أسود',tip:'4 كارب'},
+  {emoji:'🐟',title:'سردين بالليمون',ing:'• سردين معلب (في الزيت)\n• عصير ليمون طازج\n• بقدونس مفروم\n• فلفل أحمر',tip:'0 كارب'},
+  {emoji:'🍖',title:'دجاج مشوي بالأعشاب',ing:'• صدر دجاج مشوي\n• ريحان وأوريغانو\n• زيت زيتون\n• ليمون وثوم',tip:'0 كارب'},
+  {emoji:'🥑',title:'جوانتاموليَ بسيط',ing:'• أفوكادو مهروس\n• طماطم مفرومة\n• ليمون وملح\n• كزبرة طازجة',tip:'2 كارب'},
+  {emoji:'🧆',title:'فلافل الكوسا',ing:'• كوسة مبشورة معصورة\n• بيضة + جبنة\n• دقيق لوز (ملعقة)\n• بهارات',tip:'3 كارب'},
+  {emoji:'🥗',title:'سلطة سيزر بلا خبز',ing:'• خس روماني\n• دجاج مشوي مقطع\n• جبنة بارميزان\n• صلصة سيزر',tip:'3 كارب'},
+  {emoji:'🫙',title:'زبدة اللوز بالكرفس',ing:'• أعواد كرفس\n• ملعقتان زبدة لوز\n• قرفة مرشوشة\n• ملح خفيف',tip:'4 كارب'},
+];
+
+function getTodaySnacks(){
+  // Use day number since epoch to determine which 3 snacks to show
+  // Cycle repeats every 4 days with different order each day
+  const epoch=Math.floor(Date.now()/86400000);
+  const dayInCycle=epoch%4; // 0,1,2,3
+  // Shuffle deterministically using day as seed
+  function seededShuffle(arr,seed){
+    let a=[...arr.keys()]; // indices
+    for(let i=a.length-1;i>0;i--){
+      seed=(seed*9301+49297)%233280;
+      const j=Math.floor((seed/233280)*(i+1));
+      [a[i],a[j]]=[a[j],a[i]];
+    }
+    return a;
+  }
+  // Different seed per day-in-cycle
+  const seeds=[1337,4219,7823,9901];
+  const order=seededShuffle(ALL_SNACKS,seeds[dayInCycle]);
+  // Each cycle of 4 days shows all snacks; pick 3 for today based on day offset within 4-day block
+  const blockStart=Math.floor(epoch/4)*4;
+  const block4seeds=[seeds[0],seeds[1],seeds[2],seeds[3]];
+  // For the 4-day block, generate full order shuffled at block level
+  const blockOrder=seededShuffle(ALL_SNACKS,blockStart*17+3);
+  // Spread 20 snacks across 4 days: days 0-3 get indices 0-2, 3-5, 6-8, 9-11 of blockOrder
+  const start=dayInCycle*3;
+  const indices=blockOrder.slice(start,start+3);
+  return indices.map(i=>ALL_SNACKS[i]);
+}
+
+function renderSnacks(){
+  const snacks=getTodaySnacks();
+  const el=document.getElementById('snack-cards');
+  const lbl=document.getElementById('snack-day-label');
+  if(!el)return;
+  const days=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+  const today=new Date();
+  if(lbl) lbl.textContent=`اليوم: ${days[today.getDay()]} ${today.toLocaleDateString('ar-LY')}`;
+  el.innerHTML=snacks.map(s=>`
+    <div class="snack-card">
+      <div class="sk-emoji">${s.emoji}</div>
+      <div class="sk-title">${s.title}</div>
+      <div class="sk-ing" style="white-space:pre-line">${s.ing}</div>
+      <span class="sk-tip">🟢 ${s.tip}</span>
+    </div>
+  `).join('');
+}
+
+// ════════════════════════════════
+// INIT
+// ════════════════════════════════
+
+// ════════════════════════════════
+// BLOOD SUGAR TRACKER
+// ════════════════════════════════
+const BS_FIELDS=[
+  {id:'bf-before',label:'قبل الفطور'},
+  {id:'bf-after', label:'بعد الفطور'},
+  {id:'lu-before',label:'قبل الغداء'},
+  {id:'lu-after', label:'بعد الغداء'},
+  {id:'di-before',label:'قبل العشاء'},
+  {id:'di-after', label:'بعد العشاء'},
+  {id:'bed',      label:'قبل النوم'},
+];
+
+function getSugarStatus(val){
+  const v=parseFloat(val);
+  if(!v||isNaN(v))return null;
+  if(v<70) return{cls:'low',text:'⬇️ منخفض'};
+  if(v<=180)return{cls:'ok',text:'✅ مقبول'};
+  return{cls:'high',text:'⬆️ مرتفع'};
+}
+
+function updateSugarStatus(fieldId,val){
+  const el=document.getElementById('bs-status-'+fieldId);
+  if(!el)return;
+  const s=getSugarStatus(val);
+  if(!s){el.innerHTML='';return;}
+  el.innerHTML=`<span class="bs-status ${s.cls}">${s.text}</span>`;
+}
+
+function goTodaySugar(){
+  const d=document.getElementById('bs-date');
+  if(d)d.value=new Date().toISOString().slice(0,10);
+  loadSugarReadings();
+}
+
+function getSugarKey(){
+  const date=document.getElementById('bs-date')?document.getElementById('bs-date').value:'';
+  const name=(profile.name||'unknown').replace(/[^a-zA-Z0-9\u0600-\u06FF]/g,'_').slice(0,30);
+  return 'sugar:'+date+':'+name;
+}
+
+async function saveSugarReadings(){
+  const statusEl=document.getElementById('bs-save-status');
+  const date=document.getElementById('bs-date')?document.getElementById('bs-date').value:'';
+  if(!date){
+    if(statusEl){statusEl.style.display='block';statusEl.style.color='#b91c1c';statusEl.textContent='⚠️ اختر التاريخ أولاً';}
+    setTimeout(()=>{if(statusEl)statusEl.style.display='none';},2500);
+    return;
+  }
+  const readings={};
+  BS_FIELDS.forEach(f=>{const inp=document.getElementById('bs-'+f.id);readings[f.id]=inp?inp.value:'';});
+  const data={date,name:profile.name||'',readings,saved:new Date().toISOString()};
+  try{
+    await window.storage.set(getSugarKey(),JSON.stringify(data));
+    if(statusEl){statusEl.style.display='block';statusEl.style.color='#0d9488';statusEl.textContent='✅ تم حفظ القراءات بنجاح!';}
+    setTimeout(()=>{if(statusEl)statusEl.style.display='none';},2500);
+    loadSugarHistory();
+  }catch(e){
+    if(statusEl){statusEl.style.display='block';statusEl.style.color='#b91c1c';statusEl.textContent='❌ خطأ في الحفظ، حاول مرة أخرى';}
+    setTimeout(()=>{if(statusEl)statusEl.style.display='none';},2500);
+  }
+}
+
+async function loadSugarReadings(){
+  try{
+    const res=await window.storage.get(getSugarKey());
+    if(res&&res.value){
+      const data=JSON.parse(res.value);
+      BS_FIELDS.forEach(f=>{
+        const inp=document.getElementById('bs-'+f.id);
+        if(inp){inp.value=data.readings[f.id]||'';updateSugarStatus(f.id,inp.value);}
+      });
+    }else{clearSugarForm();}
+  }catch(e){clearSugarForm();}
+}
+
+function clearSugarForm(){
+  BS_FIELDS.forEach(f=>{
+    const inp=document.getElementById('bs-'+f.id);
+    if(inp)inp.value='';
+    const st=document.getElementById('bs-status-'+f.id);
+    if(st)st.innerHTML='';
+  });
+}
+
+function bsVal(v){
+  if(!v||v==='')return`<span class="bs-val empty">—</span>`;
+  const s=getSugarStatus(v);
+  if(!s)return`<span class="bs-val">${v}</span>`;
+  return`<span class="bs-val ${s.cls}">${v}</span>`;
+}
+
+async function deleteSugarRow(key){
+  if(!confirm('هل تريد حذف قراءات هذا اليوم؟'))return;
+  try{await window.storage.delete(key);loadSugarHistory();}catch(e){}
+}
+
+async function loadSugarHistory(){
+  const tbody=document.getElementById('bs-history-body');
+  if(!tbody)return;
+  tbody.innerHTML='<tr><td colspan="10" class="bs-empty">جارٍ التحميل...</td></tr>';
+  try{
+    const keysRes=await window.storage.list('sugar:');
+    if(!keysRes||!keysRes.keys||keysRes.keys.length===0){
+      tbody.innerHTML='<tr><td colspan="10" class="bs-empty">لا توجد قراءات محفوظة بعد</td></tr>';
+      return;
+    }
+    const myName=profile.name||'';
+    const rows=[];
+    for(const key of keysRes.keys){
+      try{
+        const r=await window.storage.get(key);
+        if(r&&r.value){
+          const d=JSON.parse(r.value);
+          if(!myName||d.name===myName)rows.push({key,data:d});
+        }
+      }catch(e){}
+    }
+    if(rows.length===0){
+      tbody.innerHTML='<tr><td colspan="10" class="bs-empty">لا توجد قراءات لهذه الحالة</td></tr>';
+      return;
+    }
+    rows.sort((a,b)=>(b.data.date||'').localeCompare(a.data.date||''));
+    tbody.innerHTML=rows.map(({key,data})=>{
+      const r=data.readings||{};
+      const safeKey=key.replace(/"/g,'&quot;');
+      return`<tr>
+        <td style="font-weight:700;color:#374151;">${data.date||'—'}</td>
+        <td style="font-size:.76rem;color:#be185d;font-weight:600;">${data.name||'—'}</td>
+        <td>${bsVal(r['bf-before'])}</td><td>${bsVal(r['bf-after'])}</td>
+        <td>${bsVal(r['lu-before'])}</td><td>${bsVal(r['lu-after'])}</td>
+        <td>${bsVal(r['di-before'])}</td><td>${bsVal(r['di-after'])}</td>
+        <td>${bsVal(r['bed'])}</td>
+        <td><button class="bs-del-row" onclick="deleteSugarRow('${safeKey}')">🗑️</button></td>
+      </tr>`;
+    }).join('');
+  }catch(e){
+    tbody.innerHTML='<tr><td colspan="10" class="bs-empty">تعذّر تحميل السجل</td></tr>';
+  }
+}
+
+// Override showTab to handle sugar tab init
+const _origShowTab=showTab;
+showTab=function(name,btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  if(btn)btn.classList.add('active');
+  if(name==='insulin')fillProfileFields();
+  if(name==='sugar'){
+    const d=document.getElementById('bs-date');
+    if(d&&!d.value)d.value=new Date().toISOString().slice(0,10);
+    loadSugarReadings();
+    loadSugarHistory();
+  }
+};
+
+renderAll();
+renderCart();
+initCounter();
+renderSnacks();
+</script>
+</body>
+</html>
